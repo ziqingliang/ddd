@@ -1,0 +1,33 @@
+{
+    "name": "lanzhi/laravel-ddd",
+    "description": "基于 laravel 的 DDD(领域驱动设计) 语义框架",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "蓝至",
+            "email": "i@lanzhi.me"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.2",
+        "illuminate/database": "^5.6",
+        "illuminate/console": "^5.6",
+        "symfony/dotenv": "^4.0",
+        "doctrine/dbal": "^2.7",
+        "symfony/filesystem": "^4.1",
+        "symfony/process": "^4.1",
+        "lanzhi/laravel-ddd":"*"
+    },
+    "autoload": {
+        "psr-4": {
+            "lanzhi\\ddd\\": "src/",
+            "lanzhi\\ddd\\tool\\": "Commands/",
+            "lanzhi\\ddd\\scripts\\": "scripts/"
+        }
+    },
+    "bin": [
+        "domain"
+    ]
+}

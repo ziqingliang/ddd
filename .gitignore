@@ -1,0 +1,8 @@
+/vendor
+/tests
+/.idea
+/.vscode
+/.vagrant
+/test.php
+/composer.lock
+/.domain.env

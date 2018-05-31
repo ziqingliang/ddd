@@ -1,0 +1,34 @@
+
+文件结构
+|-- app/
+|   |-- Commands/
+|   |-- Http/
+|   |-- Jobs/
+|
+|-- domain/
+|   |-- Auth/
+|       |-- processes/
+|       |-- services/
+|       |-- specifications/
+|       |-- events/
+|       |-- entities/
+|       |-- repositories/
+|       |-- factories/
+|       |-- observers/
+|-- infra/
+|   |-- models/
+|   |   |-- auth/AccountModel.php
+|   |-- dependencies/
+|   |   |-- auth/AccountDependency.php
+|-- bootstrap/
+|-- database/
+|-- resources/
+|-- storage/
+|-- config/
+|-- routes/
+|-- public/
+|-- tests/
+|-- artisan
+|-- domain
+
+
