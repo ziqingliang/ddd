@@ -32,6 +32,7 @@ $application->add(new \lanzhi\ddd\tool\InitCommand());
 $application->add(new \lanzhi\ddd\tool\ClearCommand());
 
 try{
+    class_exists('Illuminate\Console\Events\CommandFinished');//不能省略
     $status = $application->run();
     exit($status);
 }catch (Throwable $exception){
