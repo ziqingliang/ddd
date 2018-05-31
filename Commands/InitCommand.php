@@ -10,6 +10,7 @@ namespace lanzhi\ddd\tool;
 
 
 use Illuminate\Console\Command;
+use lanzhi\ddd\tool\traits\GetBasePathTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -18,12 +19,15 @@ use Symfony\Component\Process\Process;
 
 class InitCommand extends Command
 {
+    use GetBasePathTrait;
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'project:init {--force : 如果项目已存初始化过，则清除后重新初始化}';
+    protected $signature = 'project:init 
+                                    {--base-path= : 初始化基准目录，默认当前目录}
+                                    {--force : 如果项目已存初始化过，则清除后重新初始化}';
 
     /**
      * The console command description.
@@ -34,13 +38,13 @@ class InitCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->basePath = $this->getBasePath();
         if (! $input->getOption('force')) {
             $this->verifyApplicationExistence();
         }
 
         $this->info("Application initializing ... ...");
         $composerContent = $this->mergeComposerContent();
-        echo $composerContent;die;
 
         $this->copyFilesAndReplaceComposer($composerContent);
 
@@ -59,7 +63,7 @@ class InitCommand extends Command
             }, $commands);
         }
 
-        $process = new Process(implode(' && ', $commands), BASE_PATH, null, null, null);
+        $process = new Process(implode(' && ', $commands), $this->basePath, null, null, null);
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
             $process->setTty(true);
         }
@@ -74,19 +78,19 @@ class InitCommand extends Command
     private function copyFilesAndReplaceComposer($composerContent)
     {
         //首先备份原有的 composer.json .gitignore 等文件
-        @copy(BASE_PATH.'/composer.json', BASE_PATH.'/.composer.json.bak');
-        @copy(BASE_PATH.'/composer.lock', BASE_PATH.'/.composer.lock.bak');
-        @unlink(BASE_PATH.'/composer.lock');
-        @copy(BASE_PATH.'/.gitignore', BASE_PATH.'/.gitignore.bak');
+        @copy($this->basePath.'/composer.json', $this->basePath.'/.composer.json.bak');
+        @copy($this->basePath.'/composer.lock', $this->basePath.'/.composer.lock.bak');
+        @unlink($this->basePath.'/composer.lock');
+        @copy($this->basePath.'/.gitignore', $this->basePath.'/.gitignore.bak');
 
         $resourcePath = realpath(__DIR__."/../resource");
         $files = $this->getAllFiles($resourcePath);
         foreach ($files as $file){
-            $destination = str_replace($resourcePath, BASE_PATH, $file);
+            $destination = str_replace($resourcePath, $this->basePath, $file);
             $this->copyFile($file, $destination);
         }
 
-        file_put_contents(BASE_PATH.'/composer.json', $composerContent);
+        file_put_contents($this->basePath.'/composer.json', $composerContent);
     }
 
     private function getAllFiles($dir)
@@ -132,7 +136,7 @@ class InitCommand extends Command
     private function mergeComposerContent()
     {
         $initComposer = file_get_contents(__DIR__."/../resource/composer.json");
-        $rootComposer = file_exists(BASE_PATH.'/composer.json') ? file_get_contents(BASE_PATH.'/composer.json') : null;
+        $rootComposer = file_exists($this->basePath.'/composer.json') ? file_get_contents($this->basePath.'/composer.json') : null;
         $initJson = json_decode(trim($initComposer), true);
         $rootJson = $rootComposer ? json_decode(trim($rootComposer), true) : [];
 
@@ -172,7 +176,7 @@ class InitCommand extends Command
         $mark = false;
         $list = $this->getTopStructure();
         foreach ($list as list($filename, $isDir)){
-            $fullName = BASE_PATH . DIRECTORY_SEPARATOR . $filename;
+            $fullName = $this->basePath . DIRECTORY_SEPARATOR . $filename;
             if($isDir && is_dir($fullName)){
                 $mark = true;
                 break;

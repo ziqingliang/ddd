@@ -10,18 +10,22 @@ namespace lanzhi\ddd\tool;
 
 
 use Illuminate\Console\Command;
+use lanzhi\ddd\tool\traits\GetBasePathTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
 class ClearCommand extends Command
 {
+    use GetBasePathTrait;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'project:clear';
+    protected $signature = 'project:clear
+                                    {--base-path= : 清理代码的基准目录，默认当前目录}';
 
     /**
      * The console command description.
@@ -32,9 +36,11 @@ class ClearCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->basePath = $this->getBasePath();
+        
         $list = $this->getTopStructure();
         foreach ($list as list($filename, $isDir)){
-            $filename = BASE_PATH.DIRECTORY_SEPARATOR.$filename;
+            $filename = $this->basePath.DIRECTORY_SEPARATOR.$filename;
             $name = pathinfo($filename, PATHINFO_FILENAME);
 
             if($isDir && is_dir($filename)){
@@ -46,13 +52,13 @@ class ClearCommand extends Command
         }
 
         //恢复原有的 composer 配置
-        @rename(BASE_PATH.'/.composer.json.bak', BASE_PATH.'/composer.json');
-        @rename(BASE_PATH.'/.composer.lock.bak', BASE_PATH.'/composer.lock');
-        @rename(BASE_PATH.'/.gitignore.bak',     BASE_PATH.'/.gitignore');
+        @rename($this->basePath.'/.composer.json.bak', $this->basePath.'/composer.json');
+        @rename($this->basePath.'/.composer.lock.bak', $this->basePath.'/composer.lock');
+        @rename($this->basePath.'/.gitignore.bak',     $this->basePath.'/.gitignore');
 
         //更新 composer
         $composer = $this->findComposer();
-        $process = new Process($composer.' update --no-scripts', BASE_PATH, null, null, null);
+        $process = new Process($composer.' update --no-scripts', $this->basePath, null, null, null);
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
             $process->setTty(true);
         }
@@ -80,7 +86,7 @@ class ClearCommand extends Command
     private function clearDir($root)
     {
         $root   = realpath($root);
-        $prefix = BASE_PATH;
+        $prefix = $this->basePath;
 
         if(substr_compare($root, $prefix, 0, strlen($prefix))!==0){
             $this->error("Operation forbidden, directory:{$root} not belongs to the currently project.");

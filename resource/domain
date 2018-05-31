@@ -3,7 +3,7 @@
 
 $autoload = __DIR__.'/vendor/autoload.php';
 if(!file_exists($autoload)){
-    $autoload = __DIR__.'/../../vendor/autoload.php';
+    $autoload = __DIR__.'/../../autoload.php';
 }
 require $autoload;
 
@@ -25,11 +25,7 @@ class Dispatcher implements \Illuminate\Contracts\Events\Dispatcher
 $env = new \Symfony\Component\Dotenv\Dotenv();
 $env->load(__DIR__.'/.domain.env');
 
-$basePath = getenv('BASE_PATH');
-$basePath = str_replace('__DIR__', __DIR__, $basePath);
-$basePath = realpath($basePath);
-define('BASE_PATH', $basePath);
-
+$basePath = __DIR__ . DIRECTORY_SEPARATOR . trim(getenv('BASE_PATH', ''), ' .\\/');
 $container   = \Illuminate\Container\Container::getInstance();
 $dispatcher  = new Dispatcher();
 $application = new \Illuminate\Console\Application($container, $dispatcher, '0.0.1');
@@ -49,6 +45,9 @@ $application->add(new \lanzhi\ddd\tool\MakeSpecificationCommand());
 
 $application->add(new \lanzhi\ddd\tool\MakeModelCommand());
 $application->add(new \lanzhi\ddd\tool\MakeDependencyCommand());
+
+$application->add(new \lanzhi\ddd\tool\InitCommand());
+$application->add(new \lanzhi\ddd\tool\ClearCommand());
 
 try{
     $status = $application->run();
