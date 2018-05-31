@@ -23,7 +23,7 @@ class Composer
     public static function postAutoloadDump(Event $event)
     {
         $command = PHP_BINARY." artisan package:discover";
-        $process = new Process($command, BASE_PATH, null, null, null);
+        $process = new Process($command);
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
             $process->setTty(true);
         }
