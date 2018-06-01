@@ -66,6 +66,7 @@ trait DealClassFileNameTrait
     {
         $filename = sprintf("%s\\%s\\%s.php", BASE_PATH, $this->getNamespace(), $this->getClassName());
         $filename = str_replace("\\", "/", $filename);
+        $filename = str_replace("//", '/', $filename);
 
         return $filename;
     }
