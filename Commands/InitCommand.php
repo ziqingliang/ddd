@@ -53,7 +53,6 @@ class InitCommand extends Command
             $composer.' install --no-scripts',
             $composer.' run-script post-autoload-dump',
             PHP_BINARY." -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-            PHP_BINARY." -r \"file_exists('.domain.env') || copy('.domain.env.example', '.domain.env');\"",
             PHP_BINARY." artisan key:generate"
         ];
 
