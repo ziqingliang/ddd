@@ -48,9 +48,6 @@ $application->add(new \lanzhi\ddd\tool\MakeSpecificationCommand());
 $application->add(new \lanzhi\ddd\tool\MakeModelCommand());
 $application->add(new \lanzhi\ddd\tool\MakeDependencyCommand());
 
-$application->add(new \lanzhi\ddd\tool\InitCommand());
-$application->add(new \lanzhi\ddd\tool\ClearCommand());
-
 try{
     $status = $application->run();
     exit($status);
