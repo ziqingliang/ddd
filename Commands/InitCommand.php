@@ -73,6 +73,8 @@ class InitCommand extends Command
         });
 
         $this->info('Application has been ready!');
+        $this->warn("Before beginning, you should config your application environment in file:.env");
+        $this->warn("And you should config your domain environment in file:.domain.env before you can use the Domain Command");
     }
 
     private function copyFilesAndReplaceComposer($composerContent)

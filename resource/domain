@@ -26,6 +26,8 @@ $env = new \Symfony\Component\Dotenv\Dotenv();
 $env->load(__DIR__.'/.domain.env');
 
 $basePath = __DIR__ . DIRECTORY_SEPARATOR . trim(getenv('BASE_PATH', ''), ' .\\/');
+define('BASE_PATH', $basePath);
+
 $container   = \Illuminate\Container\Container::getInstance();
 $dispatcher  = new Dispatcher();
 $application = new \Illuminate\Console\Application($container, $dispatcher, '0.0.1');
