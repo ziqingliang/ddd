@@ -28,8 +28,8 @@ $container   = \Illuminate\Container\Container::getInstance();
 $dispatcher  = new Dispatcher();
 $application = new \Illuminate\Console\Application($container, $dispatcher, '0.0.1');
 
-$application->add(new \lanzhi\ddd\tool\InitCommand());
-$application->add(new \lanzhi\ddd\tool\ClearCommand());
+$application->add(new \lanzhi\ddd\installer\InitCommand());
+$application->add(new \lanzhi\ddd\installer\ClearCommand());
 
 try{
     class_exists('Illuminate\Console\Events\CommandFinished');//不能省略
@@ -40,7 +40,3 @@ try{
     echo "Stack trace:\n";
     echo $exception->getTraceAsString(),"\n";
 }
-
-
-
-

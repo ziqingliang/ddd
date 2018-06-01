@@ -6,7 +6,7 @@
  * Time: 下午9:43
  */
 
-namespace lanzhi\ddd\tool\traits;
+namespace lanzhi\ddd\installer\traits;
 
 
 trait GetBasePathTrait

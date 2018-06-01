@@ -6,11 +6,11 @@
  * Time: 上午11:45
  */
 
-namespace lanzhi\ddd\tool;
+namespace lanzhi\ddd\installer;
 
 
 use Illuminate\Console\Command;
-use lanzhi\ddd\tool\traits\GetBasePathTrait;
+use lanzhi\ddd\installer\traits\GetBasePathTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
