@@ -28,5 +28,7 @@ abstract class Factory
         return NewInstanceTrait::getInstance(true);
     }
 
+    /*
     abstract public function build():Entity;
+    */
 }
