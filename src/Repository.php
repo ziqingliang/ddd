@@ -28,6 +28,8 @@ abstract class Repository
     use NewInstanceTrait;
 
     private const GC_INTERVAL = 60; //实体最长缓存时间为60秒
+    protected const ORDER_DESC = 'desc';
+    protected const ORDER_ASC  = 'asc';
     /**
      * @var array [Entity, timestamp] 从实体类中
      */
@@ -52,6 +54,10 @@ abstract class Repository
      * @var string[]
      */
     private $groupBys = [];
+    /**
+     * @var array [field, asc|desc]
+     */
+    private $orderBy  = [];
 
     public static function getInstance()
     {
@@ -144,7 +150,7 @@ abstract class Repository
         return $this;
     }
 
-    protected function getCondition():?Condition
+    public function getCondition():?Condition
     {
         return $this->condition;
     }
@@ -172,12 +178,18 @@ abstract class Repository
         return $this;
     }
 
-    protected function getFrom():int
+    final public function orderBy(string $name, $order=self::ORDER_ASC)
+    {
+        $this->orderBy = [$name, $order];
+        return $this;
+    }
+
+    public function getFrom():int
     {
         return $this->from;
     }
 
-    protected function getLength():int
+    public function getLength():int
     {
         return $this->length;
     }
@@ -185,9 +197,14 @@ abstract class Repository
     /**
      * @return string[]
      */
-    protected function getGroupBys()
+    public function getGroupBys()
     {
         return $this->groupBys;
+    }
+
+    public function getOrderBy()
+    {
+        return $this->orderBy;
     }
 
     /**
