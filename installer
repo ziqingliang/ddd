@@ -26,7 +26,7 @@ $env = new \Symfony\Component\Dotenv\Dotenv();
 
 $container   = \Illuminate\Container\Container::getInstance();
 $dispatcher  = new Dispatcher();
-$application = new \Illuminate\Console\Application($container, $dispatcher, '0.0.3');
+$application = new \Illuminate\Console\Application($container, $dispatcher, '0.0.4');
 
 $application->add(new \lanzhi\ddd\installer\InitCommand());
 $application->add(new \lanzhi\ddd\installer\ClearCommand());
