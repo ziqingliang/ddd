@@ -19,7 +19,7 @@ final class Console extends Who
     public static function defaults(): array
     {
         return [
-            'id'          => -1,
+            'id'          => self::ID_CONSOLE,
             'name'        => 'console',
             'description' => 'console shell'
         ];

@@ -12,9 +12,6 @@ namespace lanzhi\ddd\base\who;
 final class Guest extends Who
 {
 
-    /**
-     * Guest constructor
-     */
     public function __construct()
     {
         parent::__construct([]);
@@ -23,7 +20,7 @@ final class Guest extends Who
     public static function defaults(): array
     {
         return [
-            'id'          => 0,
+            'id'          => self::ID_GUEST,
             'name'        => 'guest',
             'description' => 'guest, not authenticated'
         ];

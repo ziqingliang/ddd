@@ -19,7 +19,7 @@ final class Timer extends Who
     public static function defaults(): array
     {
         return [
-            'id'          => -2,
+            'id'          => self::ID_TIMER,
             'name'        => 'timer',
             'description' => 'cron tab timer'
         ];

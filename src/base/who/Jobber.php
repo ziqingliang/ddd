@@ -20,7 +20,7 @@ final class Jobber extends Who
     public static function defaults(): array
     {
         return [
-            'id'          => -3,
+            'id'          => self::ID_JOBBER,
             'name'        => 'jobber',
             'description' => 'temporary job'
         ];
