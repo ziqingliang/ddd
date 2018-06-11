@@ -8,6 +8,7 @@
 
 namespace lanzhi\ddd\base;
 
+use Illuminate\Container\Container;
 use lanzhi\ddd\Exceptions\TypeMatchFailed;
 use lanzhi\ddd\Exceptions\TypeUndefined;
 use lanzhi\ddd\Exceptions\AttributeReadonly;
@@ -62,10 +63,18 @@ abstract class Data
             $this->setOneAttribute($attribute, $value);
         }
 
+        //使用容器处理依赖
+        Container::getInstance()->call([$this, '__dependency']);
+
         $this->init();
     }
 
     public function init()
+    {
+
+    }
+
+    public function __dependency()
     {
 
     }

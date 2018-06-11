@@ -15,7 +15,7 @@ namespace lanzhi\ddd\base\who;
  *
  * 表示已经登陆用户
  */
-final class Author extends Who
+class Author extends Who
 {
     public static function defaults(): array
     {
