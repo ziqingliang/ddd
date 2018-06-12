@@ -248,7 +248,11 @@ abstract class Repository
     public function getById(int $id):Entity
     {
         $condition = new IdCondition($id);
-        return $this->filter($condition)->first();
+        $entity = $this->filter($condition)->first();
+        if(!$entity){
+            throw new EntityNotFound("id:$id");
+        }
+        return $entity;
     }
 
     /**
