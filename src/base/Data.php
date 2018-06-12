@@ -30,6 +30,8 @@ use lanzhi\ddd\Exceptions\UnSupported;
  * 属性完整性校验
  * 最小化属性校验
  *
+ * 定义依赖
+ * @method void __dependency()
  */
 abstract class Data
 {
@@ -64,7 +66,13 @@ abstract class Data
         }
 
         //使用容器处理依赖
-        Container::getInstance()->call([$this, '__dependency']);
+        if(
+            method_exists($this, '__dependency') &&
+            (new \ReflectionMethod($this, '__dependency'))->isPublic()
+        ){
+            Container::getInstance()->call([$this, '__dependency']);
+        }
+
 
         $this->init();
     }
@@ -74,10 +82,10 @@ abstract class Data
 
     }
 
-    public function __dependency()
-    {
-
-    }
+//    public function __dependency()
+//    {
+//
+//    }
 
     protected function getMandate()
     {
