@@ -13,13 +13,15 @@ use lanzhi\ddd\base\Condition;
 
 class IdCondition extends Condition
 {
+    private $id;
+
     public function __construct(int $id)
     {
-        parent::__construct($id);
+        $this->id = $id;
     }
 
-    public function getData():int
+    public function getId():int
     {
-        return parent::getData();
+        return $this->id;
     }
 }
