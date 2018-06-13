@@ -153,7 +153,7 @@ abstract class Repository
     /**
      * @return Condition[]
      */
-    public function getCondition():array
+    public function getConditions():array
     {
         return $this->conditions;
     }
