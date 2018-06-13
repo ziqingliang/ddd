@@ -39,9 +39,9 @@ abstract class Repository
      */
     private static $isInTransaction = false;
     /**
-     * @var Condition
+     * @var Condition[]
      */
-    private $condition;
+    private $conditions=[];
     /**
      * @var int
      */
@@ -146,13 +146,16 @@ abstract class Repository
      */
     final public function filter(Condition $condition)
     {
-        $this->condition = $condition;
+        $this->conditions[] = $condition;
         return $this;
     }
 
-    public function getCondition():?Condition
+    /**
+     * @return Condition[]
+     */
+    public function getCondition():array
     {
-        return $this->condition;
+        return $this->conditions;
     }
 
     /**
