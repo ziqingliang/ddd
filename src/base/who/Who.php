@@ -33,7 +33,6 @@ abstract class Who extends Value
      * @param int $id
      * @param string|null $name
      * @return Author|Console|Guest|Jobber|Timer
-     * @throws \Exception
      */
     public static function getById(int $id, string $name=null)
     {
