@@ -42,10 +42,10 @@ abstract class Value extends Data
 
     }
 
-    public function __set(string $attribute, $value)
-    {
-        throw new UnSupported("can't modify properties of a Value object");
-    }
+//    public function __set(string $attribute, $value)
+//    {
+//        throw new UnSupported("can't modify properties of a Value object");
+//    }
 
     final public static function readonly(): array
     {
