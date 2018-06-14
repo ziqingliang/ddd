@@ -39,6 +39,10 @@ abstract class Repository
      */
     private static $isInTransaction = false;
     /**
+     * @var string 当前事物标识
+     */
+    private static $mark;
+    /**
      * @var Condition[]
      */
     private $conditions=[];
@@ -86,13 +90,19 @@ abstract class Repository
     }
 
     /**
+     * 开启事务，同时做批次标记
+     * 如果当前已经在事务中，则直接返回false
      * @return bool
      */
-    final public static function transactionBegin():bool
+    final public static function transactionBegin(string $mark):bool
     {
+        if(self::isInTransaction()){
+            return false;
+        }
         try{
             self::getTransaction()->begin();
             self::$isInTransaction = true;
+            self::$mark = $mark;
             return true;
         }catch (TransactionFailed $exception){
             return false;
@@ -100,28 +110,38 @@ abstract class Repository
     }
 
     /**
+     * 只提交同批次开启的事务
      * @return bool
      */
-    final public static function transactionCommit():bool
+    final public static function transactionCommit(string $mark):bool
     {
         try{
-            self::getTransaction()->commit();
-            self::$isInTransaction = false;
-            return true;
+            if(self::$mark==$mark){
+                self::getTransaction()->commit();
+                self::$isInTransaction = false;
+                return true;
+            }else{
+                return false;
+            }
         }catch (TransactionFailed $exception){
             return false;
         }
     }
 
     /**
+     * 只回滚同批次开启的事务
      * @return bool
      */
-    final public static function transactionRollback():bool
+    final public static function transactionRollback(string $mark):bool
     {
         try{
-            self::getTransaction()->rollback();
-            self::$isInTransaction = false;
-            return true;
+            if(self::$mark==$mark){
+                self::getTransaction()->rollback();
+                self::$isInTransaction = false;
+                return true;
+            }else{
+                return false;
+            }
         }catch (TransactionFailed $exception){
             return false;
         }
@@ -361,12 +381,10 @@ abstract class Repository
      */
     public function addMany(array $entities)
     {
-        $outTrans = !self::isInTransaction();
-
         try{
-            $outTrans && self::transactionBegin();
+            self::transactionBegin(__METHOD__);
             $ids = $this->_addMany($entities);
-            $outTrans && self::transactionCommit();
+            self::transactionCommit(__METHOD__);
 
             /**
              * @var Entity $entity
@@ -379,8 +397,8 @@ abstract class Repository
                 $list[] = new $class($data);
             }
             return $list;
-        }catch (AddFailed $exception){
-            $outTrans && self::transactionRollback();
+        }catch (\Exception $exception){
+            self::transactionRollback(__METHOD__);
             throw $exception;
         }
     }
@@ -395,7 +413,7 @@ abstract class Repository
      */
     public function updateManyWithCondition(array $data)
     {
-        if(!$this->condition){
+        if(!$this->conditions){
             throw new Error("禁止针对所有数据执行 update");
         }
 
@@ -410,15 +428,14 @@ abstract class Repository
      */
     public function updateMany(array $entities)
     {
-        $outTrans = !self::isInTransaction();
         try{
-            $outTrans && self::transactionBegin();
+            self::transactionBegin(__METHOD__);
             foreach ($entities as $entity){
                 $this->_update($entity);
             }
-            $outTrans && self::transactionCommit();
-        }catch (UpdateFailed $exception){
-            $outTrans && self::transactionRollback();
+            self::transactionCommit(__METHOD__);
+        }catch (\Exception $exception){
+            self::transactionRollback(__METHOD__);
             throw $exception;
         }
     }
@@ -432,7 +449,7 @@ abstract class Repository
      */
     public function removeMany()
     {
-        if(!$this->condition){
+        if(!$this->conditions){
             throw new Error("禁止针对所有数据执行 delete");
         }
 
