@@ -19,7 +19,7 @@ use lanzhi\ddd\Value;
  * @property string $name
  * @property string $description
  */
-abstract class Who extends Value
+class Who extends Value
 {
     protected const ID_GUEST   = -1;
 
