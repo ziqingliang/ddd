@@ -33,7 +33,7 @@ abstract class Repository
     /**
      * @var array [Entity, timestamp] 从实体类中
      */
-    private static $entities;
+    private static $entities=[];
     /**
      * @var bool 当前是否在一个事务中
      */
@@ -66,6 +66,11 @@ abstract class Repository
     public static function getInstance()
     {
         return NewInstanceTrait::getInstance(true);
+    }
+
+    public function resetFilter()
+    {
+        $this->conditions = [];
     }
 
     /**
