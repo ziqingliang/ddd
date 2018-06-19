@@ -152,10 +152,28 @@ abstract class Repository
         }
     }
 
+    protected static function cacheEntities(array $entities)
+    {
+        $now = time();
+        foreach ($entities as $entity){
+            self::$entities[$entity->id] = [$entity, $now];
+        }
+    }
+
+    protected static function cacheEntity(Entity $entity)
+    {
+        self::$entities[$entity->id] = [$entity, time()];
+    }
+
+    protected static function getEntityFromCache(int $id)
+    {
+        return self::$entities[$id] ?? null;
+    }
+
     /**
      * 清理缓存的实体类
      */
-    private function clear()
+    private function clearCachedEntities()
     {
         $now = time();
         foreach (self::$entities as $id=>list($entity, $timestamp)){
@@ -290,13 +308,10 @@ abstract class Repository
      */
     public function get():array
     {
-        $this->clear();
+        $this->clearCachedEntities();
 
         $entities = $this->_get();
-        $now = time();
-        foreach ($entities as $entity){
-            self::$entities[$entity->id] = [$entity, $now];
-        }
+        self::cacheEntities($entities);
 
         return $entities;
     }
@@ -346,7 +361,7 @@ abstract class Repository
         assert($entity->isValid());
 
         $this->_update($entity);
-        $old = self::$entities[$entity->id] ?? null;
+        $old = self::getEntityFromCache($entity->id);
 
         $observers = $entity->getObservers();
         foreach ($observers as $observer){
