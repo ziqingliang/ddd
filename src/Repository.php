@@ -25,7 +25,9 @@ use lanzhi\ddd\mockers\TransactionHandlerMocker;
 
 abstract class Repository
 {
-    use NewInstanceTrait;
+    use NewInstanceTrait{
+        getInstance as _getInstance;
+    }
 
     private const GC_INTERVAL = 60; //实体最长缓存时间为60秒
     protected const ORDER_DESC = 'desc';
@@ -65,7 +67,7 @@ abstract class Repository
 
     public static function getInstance()
     {
-        return NewInstanceTrait::getInstance(true);
+        return self::_getInstance(true);
     }
 
     public function resetFilter()
