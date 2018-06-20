@@ -399,7 +399,7 @@ abstract class Data
             return $default;
         }
 
-        $type = $this->getAttributeLabel($attribute);
+        $type = $this->attributeType($attribute);
         if(is_array($type)){//此时属性类型为对象数组
             $type = 'array';
         }elseif(!$this->isNormalType($type)){
