@@ -20,21 +20,17 @@ use Illuminate\Container\Container;
  */
 trait NewInstanceTrait
 {
-    private static $instance;
-
     public static function getInstance(bool $isNew=false)
     {
         $class = get_called_class();
         $container = Container::getInstance();
-        if(!self::$instance){
-            self::$instance = $container->make($class);
-        }
-
         if($isNew){
             $instance = $container->make($class);
-        }else{
-            $instance = self::$instance;
+        }elseif(!$container->has($class)){
+            $container->singleton($class, $class);
         }
+
+        $instance = $instance ?? $container->get($class);
         $instance->init();
 
         return $instance;
