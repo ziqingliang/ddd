@@ -70,9 +70,14 @@ abstract class Repository
         return self::_getInstance(true);
     }
 
-    public function resetFilter()
+    public function reset()
     {
         $this->conditions = [];
+        $this->from       = 0;
+        $this->length     = 5000;
+        $this->groupBys   = [];
+        $this->orderBy    = [];
+        return $this;
     }
 
     /**
