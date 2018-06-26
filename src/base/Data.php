@@ -277,7 +277,7 @@ abstract class Data
     {
         $json = json_decode($value, true);
         if(is_array($type)){
-            $data = $this->castFromArray(reset($type), $json);
+            $data = $this->castFromArray($type, $json);
         }elseif($json){
             $data = new $type($json);
         }else{
