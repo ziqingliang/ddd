@@ -30,8 +30,8 @@ abstract class Repository
     }
 
     private const GC_INTERVAL = 60; //实体最长缓存时间为60秒
-    protected const ORDER_DESC = 'desc';
-    protected const ORDER_ASC  = 'asc';
+    const ORDER_DESC = 'desc';
+    const ORDER_ASC  = 'asc';
     /**
      * @var array [Entity, timestamp] 从实体类中
      */
@@ -61,7 +61,7 @@ abstract class Repository
      */
     private $groupBys = [];
     /**
-     * @var array [field, asc|desc]
+     * @var array [[field, asc|desc]]
      */
     private $orderBy  = [];
 
@@ -231,9 +231,14 @@ abstract class Repository
         return $this;
     }
 
-    final public function orderBy(string $name, $order=self::ORDER_ASC)
+    /**
+     * @param string|array $names
+     * @param string $order
+     * @return $this
+     */
+    final public function orderBy(string $field, $order=self::ORDER_ASC)
     {
-        $this->orderBy = [$name, $order];
+        $this->orderBy[] = [$field, $order];
         return $this;
     }
 
@@ -256,6 +261,11 @@ abstract class Repository
     }
 
     public function getOrderBy()
+    {
+        return $this->orderBy ? $this->orderBy[0] : [];
+    }
+
+    public function getOrderBys()
     {
         return $this->orderBy;
     }
