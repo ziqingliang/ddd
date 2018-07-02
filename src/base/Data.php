@@ -190,19 +190,26 @@ abstract class Data
                 }
             }else{
                 $type = $this->attributeType($attribute);
-                if($this->isNormalType($type)){
+                if($this->isNormalType($type)){//常规类型
                     $data[$attribute] = $this->mandate->$attribute;
-                }elseif(is_array($this->mandate->$attribute)){
+                }elseif(is_string($type)){//对象类型
+                    $data[$attribute] = $this->mandate->$attribute->toArray($filterNull);
+                }elseif($this->isNormalType(reset($type))){//常规数组
+                    $temp = [];
+                    foreach ($this->mandate->$attribute as $key=>$value){
+                        $temp[$key] = $value;
+                    }
+                    $data[$attribute] = $temp;
+                }else{//对象数组
                     $temp = [];
                     /**
                      * @var Data $value
                      */
                     foreach ($this->mandate->$attribute as $key=>$value){
+
                         $temp[$key] = $value->toArray($filterNull);
                     }
                     $data[$attribute] = $temp;
-                }else{
-                    $data[$attribute] = $this->mandate->$attribute->toArray($filterNull);
                 }
             }
         }
@@ -304,7 +311,9 @@ abstract class Data
         }else{
             $type = reset($type);
             foreach ($values as $key=>$value){
-                if($value instanceof $type){
+                if($this->isNormalType($type)){
+                    $data[$key] = $this->castToNormal($type, $value);
+                }elseif($value instanceof $type){
                     $data[$key] = $value;
                 }elseif(is_string($value)){
                     $json = json_decode($value, true);
@@ -400,7 +409,7 @@ abstract class Data
         }
 
         $type = $this->attributeType($attribute);
-        if(is_array($type)){//此时属性类型为对象数组
+        if(is_array($type)){//此时属性类型为对象数组或者常规类型数组
             $type = 'array';
         }elseif(!$this->isNormalType($type)){
             $type = 'object';
