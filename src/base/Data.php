@@ -43,6 +43,7 @@ abstract class Data
     /**
      * Data constructor.
      * @param array $data
+     * @throws
      */
     public function __construct(array $data=[])
     {
@@ -104,7 +105,7 @@ abstract class Data
     /**
      * @param string $attribute
      * @param mixed  $value
-     * @throws \Exception
+     * @throws
      */
     public function __set(string $attribute, $value)
     {
@@ -129,7 +130,7 @@ abstract class Data
      * 不再支持 getter 方法
      * @param $attribute
      * @return mixed
-     * @throws \Exception
+     * @throws
      */
     public function &__get($attribute)
     {
@@ -144,7 +145,7 @@ abstract class Data
      * 内部使用，设置一个属性值，不经过setter方法
      * @param string $attribute
      * @param $value
-     * @throws \Exception
+     * @throws
      */
     protected function setOneAttribute(string $attribute, $value)
     {
