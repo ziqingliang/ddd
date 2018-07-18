@@ -73,7 +73,6 @@ abstract class Data
             Container::getInstance()->call([$this, '__dependency']);
         }
 
-
         $this->init();
     }
 
@@ -81,11 +80,6 @@ abstract class Data
     {
 
     }
-
-//    public function __dependency()
-//    {
-//
-//    }
 
     protected function getMandate()
     {
@@ -286,7 +280,7 @@ abstract class Data
         $json = json_decode($value, true);
         if(is_array($type)){
             $data = $this->castFromArray($type, $json);
-        }elseif($json){
+        }elseif($json!==false){
             $data = new $type($json);
         }else{
             throw new \Exception(sprintf(
