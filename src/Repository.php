@@ -342,6 +342,11 @@ abstract class Repository
         return $this->_size();
     }
 
+    public function sum(string $name):int
+    {
+        return $this->_sum($name);
+    }
+
     /**
      * 返回经过持久化后的实体
      * @param Entity $entity
@@ -491,6 +496,11 @@ abstract class Repository
         }
 
         $this->_removeMany();
+    }
+
+    protected function _sum(string $name):int
+    {
+        return 0;
     }
 
     /**

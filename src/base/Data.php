@@ -108,7 +108,7 @@ abstract class Data
             throw new AttributeUndefined(AttributeUndefined::ACCESS_SET, [get_called_class(), $attribute]);
         }
 
-        if($this->isReadonly($attribute)){
+        if(self::isReadonly($attribute)){
             throw new AttributeReadonly([get_called_class(), $attribute]);
         }
 
@@ -369,9 +369,90 @@ abstract class Data
      * @param $attribute
      * @return bool
      */
-    public function isReadonly($attribute)
+    public static function isReadonly($attribute)
     {
         return in_array($attribute, static::readonly());
+    }
+
+    public static function isInt(string $attribute)
+    {
+        $types = self::types();
+        $type  = $types[$attribute] ?? null;
+        switch ($type){
+            case 'int':
+            case 'integer':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static function isFloat(string $attribute)
+    {
+        $types = self::types();
+        $type  = $types[$attribute] ?? null;
+        switch ($type){
+            case 'float':
+            case 'double':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static function isBool(string $attribute)
+    {
+        $types = self::types();
+        $type  = $types[$attribute] ?? null;
+        switch ($type){
+            case 'bool':
+            case 'boolean':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static function isString(string $attribute)
+    {
+        $types = self::types();
+        $type  = $types[$attribute] ?? null;
+        if($type==='string'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public static function isArray(string $attribute)
+    {
+        $types = self::types();
+        $type  = $types[$attribute] ?? null;
+        if($type==='array'){
+            return true;
+        }elseif(is_array($type)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public static function isScalar(string $attribute)
+    {
+        $types = self::types();
+        $type  = $types[$attribute] ?? null;
+        switch ($type){
+            case 'int':
+            case 'integer':
+            case 'float':
+            case 'double':
+            case 'bool':
+            case 'boolean':
+            case 'string':
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**
