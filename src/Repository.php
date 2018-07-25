@@ -104,6 +104,7 @@ abstract class Repository
     /**
      * 开启事务，同时做批次标记
      * 如果当前已经在事务中，则直接返回false
+     * @param string $mark
      * @return bool
      */
     final public static function transactionBegin(string $mark):bool
@@ -123,6 +124,7 @@ abstract class Repository
 
     /**
      * 只提交同批次开启的事务
+     * @param string $mark
      * @return bool
      */
     final public static function transactionCommit(string $mark):bool
@@ -142,6 +144,7 @@ abstract class Repository
 
     /**
      * 只回滚同批次开启的事务
+     * @param string $mark
      * @return bool
      */
     final public static function transactionRollback(string $mark):bool
@@ -232,7 +235,7 @@ abstract class Repository
     }
 
     /**
-     * @param string|array $names
+     * @param string $field
      * @param string $order
      * @return $this
      */
@@ -352,6 +355,16 @@ abstract class Repository
         return $this->_column($name);
     }
 
+    public function select(array $names):array
+    {
+        return $this->_select($names);
+    }
+
+    public function selectRaw(string $express):array
+    {
+        return $this->_selectRaw($express);
+    }
+
     /**
      * 返回经过持久化后的实体
      * @param Entity $entity
@@ -424,7 +437,7 @@ abstract class Repository
      * 此时无法通过观察者模式追踪实体变化
      * @param Entity[] $entities
      * @return array
-     * @throws AddFailed
+     * @throws
      */
     public function addMany(array $entities)
     {
@@ -471,7 +484,7 @@ abstract class Repository
      * 单次更新多个实体
      * 此时无法通过观察者模式追踪实体变化
      * @param Entity[] $entities
-     * @throws UpdateFailed
+     * @throws
      */
     public function updateMany(array $entities)
     {
@@ -509,6 +522,16 @@ abstract class Repository
     }
 
     protected function _column(string $name):array
+    {
+        return [];
+    }
+
+    protected function _select(array $names):array
+    {
+        return [];
+    }
+
+    protected function _selectRaw(string $express):array
     {
         return [];
     }
