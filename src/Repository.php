@@ -347,6 +347,11 @@ abstract class Repository
         return $this->_sum($name);
     }
 
+    public function column(string $name):array
+    {
+        return $this->_column($name);
+    }
+
     /**
      * 返回经过持久化后的实体
      * @param Entity $entity
@@ -501,6 +506,11 @@ abstract class Repository
     protected function _sum(string $name):int
     {
         return 0;
+    }
+
+    protected function _column(string $name):array
+    {
+        return [];
     }
 
     /**
