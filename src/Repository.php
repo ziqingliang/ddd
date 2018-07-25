@@ -30,6 +30,8 @@ abstract class Repository
     }
 
     private const GC_INTERVAL = 60; //实体最长缓存时间为60秒
+    private const MAX_LENGTH  = 50000;
+
     const ORDER_DESC = 'desc';
     const ORDER_ASC  = 'asc';
     /**
@@ -55,7 +57,7 @@ abstract class Repository
     /**
      * @var int
      */
-    private $length = 5000;
+    private $length = self::MAX_LENGTH;
     /**
      * @var string[]
      */
@@ -74,7 +76,7 @@ abstract class Repository
     {
         $this->conditions = [];
         $this->from       = 0;
-        $this->length     = 5000;
+        $this->length     = self::MAX_LENGTH;
         $this->groupBys   = [];
         $this->orderBy    = [];
         return $this;
