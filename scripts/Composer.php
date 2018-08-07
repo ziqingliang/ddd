@@ -24,7 +24,7 @@ class Composer
     {
         $command = PHP_BINARY." artisan package:discover";
         $process = new Process($command);
-        if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
+        if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty') && is_writable('/dev/tty')) {
             $process->setTty(true);
         }
 
