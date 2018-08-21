@@ -347,7 +347,7 @@ abstract class Repository
         return $this->_size();
     }
 
-    public function sum(string $name):int
+    public function sum(string $name):float
     {
         return $this->_sum($name);
     }
@@ -518,7 +518,7 @@ abstract class Repository
         $this->_removeMany();
     }
 
-    protected function _sum(string $name):int
+    protected function _sum(string $name):float
     {
         return 0;
     }
