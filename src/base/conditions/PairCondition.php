@@ -1,15 +1,15 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/6/12
  * Time: 下午7:38
  */
 
-namespace lanzhi\ddd\base\conditions;
+namespace ziqing\ddd\base\conditions;
 
 
-use lanzhi\ddd\base\Condition;
+use ziqing\ddd\base\Condition;
 
 class PairCondition extends Condition
 {

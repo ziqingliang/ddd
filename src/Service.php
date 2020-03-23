@@ -1,19 +1,19 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/22
  * Time: 上午11:47
  */
 
-namespace lanzhi\ddd;
+namespace ziqing\ddd;
 
 
-use lanzhi\ddd\base\NewInstanceTrait;
+use ziqing\ddd\base\NewInstanceTrait;
 
 /**
  * Class Service
- * @package lanzhi\ddd
+ * @package ziqing\ddd
  *
  * 领域服务抽象类
  * 领域服务类，是业务逻辑的主要承担着

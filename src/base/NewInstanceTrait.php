@@ -1,19 +1,19 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/22
  * Time: 上午10:25
  */
 
-namespace lanzhi\ddd\base;
+namespace ziqing\ddd\base;
 
 
 use Illuminate\Container\Container;
 
 /**
  * Class NewInstanceTrait
- * @package lanzhi\ddd\base
+ * @package ziqing\ddd\base
  *
  * 通过 laravel 框架的容器获取当前类的实例
  * 帮助类实例化时自动处理其通过构造函数定义的依赖

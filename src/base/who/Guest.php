@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/22
  * Time: 上午10:52
  */
 
-namespace lanzhi\ddd\base\who;
+namespace ziqing\ddd\base\who;
 
 
 final class Guest extends Who

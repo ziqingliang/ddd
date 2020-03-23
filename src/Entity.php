@@ -1,20 +1,20 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2017/8/10
  * Time: 下午8:26
  */
 
-namespace lanzhi\ddd;
+namespace ziqing\ddd;
 
 
-use lanzhi\ddd\base\Data;
-use lanzhi\ddd\base\who\Who;
+use ziqing\ddd\base\Data;
+use ziqing\ddd\base\who\Who;
 
 /**
  * Class Entity
- * @package lanzhi\ddd
+ * @package ziqing\ddd
  *
  * 实体抽象类
  *

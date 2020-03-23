@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/23
  * Time: 下午3:53
  */
 
-namespace lanzhi\ddd\Exceptions;
+namespace ziqing\ddd\Exceptions;
 
 
 class RemoveFailed extends Error

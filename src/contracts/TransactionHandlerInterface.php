@@ -1,15 +1,15 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/30
  * Time: 下午8:00
  */
 
-namespace lanzhi\ddd\contracts;
+namespace ziqing\ddd\contracts;
 
 
-use lanzhi\ddd\Exceptions\TransactionFailed;
+use ziqing\ddd\Exceptions\TransactionFailed;
 
 interface TransactionHandlerInterface
 {

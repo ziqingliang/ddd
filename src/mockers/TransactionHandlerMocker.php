@@ -1,16 +1,16 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/31
  * Time: 上午12:44
  */
 
-namespace lanzhi\ddd\mockers;
+namespace ziqing\ddd\mockers;
 
 
-use lanzhi\ddd\contracts\TransactionHandlerInterface;
-use lanzhi\ddd\Exceptions\TransactionFailed;
+use ziqing\ddd\contracts\TransactionHandlerInterface;
+use ziqing\ddd\Exceptions\TransactionFailed;
 
 class TransactionHandlerMocker implements TransactionHandlerInterface
 {

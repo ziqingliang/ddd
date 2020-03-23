@@ -1,19 +1,19 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/22
  * Time: 上午10:46
  */
 
-namespace lanzhi\ddd\base\who;
+namespace ziqing\ddd\base\who;
 
 
-use lanzhi\ddd\Value;
+use ziqing\ddd\Value;
 
 /**
  * Interface Who
- * @package lanzhi\ddd\who
+ * @package ziqing\ddd\who
  *
  * @property int    $id
  * @property string $name

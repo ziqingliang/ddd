@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2017/10/17
  * Time: 下午2:15
  */
 
-namespace lanzhi\ddd\Exceptions;
+namespace ziqing\ddd\Exceptions;
 
 
 

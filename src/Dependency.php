@@ -1,19 +1,19 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/31
  * Time: 上午10:25
  */
 
-namespace lanzhi\ddd;
+namespace ziqing\ddd;
 
 
-use lanzhi\ddd\base\NewInstanceTrait;
+use ziqing\ddd\base\NewInstanceTrait;
 
 /**
  * Class Dependency
- * @package lanzhi\ddd
+ * @package ziqing\ddd
  *
  * 定义系统的外部依赖
  * 如接口封装，依赖服务封装等

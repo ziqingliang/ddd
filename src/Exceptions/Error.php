@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/22
  * Time: 上午11:29
  */
 
-namespace lanzhi\ddd\Exceptions;
+namespace ziqing\ddd\Exceptions;
 
 
 class Error extends \Exception

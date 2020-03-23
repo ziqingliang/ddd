@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/31
  * Time: 下午9:43
  */
 
-namespace lanzhi\ddd\installer\traits;
+namespace ziqing\ddd\tool\traits;
 
 
 trait GetBasePathTrait

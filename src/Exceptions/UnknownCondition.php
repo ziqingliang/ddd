@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/31
  * Time: 上午1:34
  */
 
-namespace lanzhi\ddd\Exceptions;
+namespace ziqing\ddd\Exceptions;
 
 
 class UnknownCondition extends Error

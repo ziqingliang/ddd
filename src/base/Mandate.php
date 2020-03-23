@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2017/8/10
  * Time: 下午10:24
  */
 
-namespace lanzhi\ddd\base;
+namespace ziqing\ddd\base;
 
 /**
  * Class Mandate

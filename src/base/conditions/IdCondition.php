@@ -1,15 +1,15 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/23
  * Time: 下午12:00
  */
 
-namespace lanzhi\ddd\base\conditions;
+namespace ziqing\ddd\base\conditions;
 
 
-use lanzhi\ddd\base\Condition;
+use ziqing\ddd\base\Condition;
 
 class IdCondition extends Condition
 {

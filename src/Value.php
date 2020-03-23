@@ -1,19 +1,19 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2017/8/10
  * Time: 下午8:42
  */
 
-namespace lanzhi\ddd;
+namespace ziqing\ddd;
 
-use lanzhi\ddd\Exceptions\UnSupported;
-use lanzhi\ddd\base\Data;
+use ziqing\ddd\Exceptions\UnSupported;
+use ziqing\ddd\base\Data;
 
 /**
  * Class Value
- * @package lanzhi\ddd
+ * @package ziqing\ddd
  *
  * 值对象，没有唯一标示，一旦创建，禁止修改，只能复制
  * 如果一个值对象所有属性都为 null，则该值对象没有意义
@@ -24,7 +24,8 @@ abstract class Value extends Data
     /**
      * 判断两个值对象是否相等
      * 仅当两个值对象所属类型相同，且所有属性完全相等时，也认为两个值对象相等
-     * @param Value $value
+     * @param Data $value
+     * @param bool $strict
      * @return bool
      */
     final public function equalTo(Data $value, bool $strict=true):bool

@@ -1,27 +1,27 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/22
  * Time: 下午6:23
  */
 
-namespace lanzhi\ddd;
+namespace ziqing\ddd;
 
 
 use Illuminate\Container\Container;
-use lanzhi\ddd\base\Condition;
-use lanzhi\ddd\base\conditions\IdCondition;
-use lanzhi\ddd\base\NewInstanceTrait;
-use lanzhi\ddd\contracts\TransactionHandlerInterface;
-use lanzhi\ddd\Exceptions\AddFailed;
-use lanzhi\ddd\Exceptions\EntityNotFound;
-use lanzhi\ddd\Exceptions\Error;
-use lanzhi\ddd\Exceptions\LookupFailed;
-use lanzhi\ddd\Exceptions\RemoveFailed;
-use lanzhi\ddd\Exceptions\TransactionFailed;
-use lanzhi\ddd\Exceptions\UpdateFailed;
-use lanzhi\ddd\mockers\TransactionHandlerMocker;
+use ziqing\ddd\base\Condition;
+use ziqing\ddd\base\conditions\IdCondition;
+use ziqing\ddd\base\NewInstanceTrait;
+use ziqing\ddd\contracts\TransactionHandlerInterface;
+use ziqing\ddd\Exceptions\AddFailed;
+use ziqing\ddd\Exceptions\EntityNotFound;
+use ziqing\ddd\Exceptions\Error;
+use ziqing\ddd\Exceptions\LookupFailed;
+use ziqing\ddd\Exceptions\RemoveFailed;
+use ziqing\ddd\Exceptions\TransactionFailed;
+use ziqing\ddd\Exceptions\UpdateFailed;
+use ziqing\ddd\mockers\TransactionHandlerMocker;
 
 abstract class Repository
 {

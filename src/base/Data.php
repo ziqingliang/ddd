@@ -1,19 +1,19 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2017/8/10
  * Time: 下午10:19
  */
 
-namespace lanzhi\ddd\base;
+namespace ziqing\ddd\base;
 
 use Illuminate\Container\Container;
-use lanzhi\ddd\Exceptions\TypeMatchFailed;
-use lanzhi\ddd\Exceptions\TypeUndefined;
-use lanzhi\ddd\Exceptions\AttributeReadonly;
-use lanzhi\ddd\Exceptions\AttributeUndefined;
-use lanzhi\ddd\Exceptions\UnSupported;
+use ziqing\ddd\Exceptions\TypeMatchFailed;
+use ziqing\ddd\Exceptions\TypeUndefined;
+use ziqing\ddd\Exceptions\AttributeReadonly;
+use ziqing\ddd\Exceptions\AttributeUndefined;
+use ziqing\ddd\Exceptions\UnSupported;
 
 
 /**
@@ -212,6 +212,17 @@ abstract class Data
         return $data;
     }
 
+    /**
+     * @param bool $filterNull
+     * @return string
+     */
+    public function toJson($filterNull=true)
+    {
+        $json = $this->toArray($filterNull);
+
+        return json_encode($json, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+    }
+
     //----------------------------------- cast from string or array -----------------------------------------------------
     /**
      * @var array
@@ -376,7 +387,7 @@ abstract class Data
 
     public static function isInt(string $attribute)
     {
-        $types = self::types();
+        $types = static::types();
         $type  = $types[$attribute] ?? null;
         switch ($type){
             case 'int':
@@ -389,7 +400,7 @@ abstract class Data
 
     public static function isFloat(string $attribute)
     {
-        $types = self::types();
+        $types = static::types();
         $type  = $types[$attribute] ?? null;
         switch ($type){
             case 'float':
@@ -402,7 +413,7 @@ abstract class Data
 
     public static function isBool(string $attribute)
     {
-        $types = self::types();
+        $types = static::types();
         $type  = $types[$attribute] ?? null;
         switch ($type){
             case 'bool':
@@ -415,7 +426,7 @@ abstract class Data
 
     public static function isString(string $attribute)
     {
-        $types = self::types();
+        $types = static::types();
         $type  = $types[$attribute] ?? null;
         if($type==='string'){
             return true;
@@ -426,7 +437,7 @@ abstract class Data
 
     public static function isArray(string $attribute)
     {
-        $types = self::types();
+        $types = static::types();
         $type  = $types[$attribute] ?? null;
         if($type==='array'){
             return true;
@@ -439,7 +450,7 @@ abstract class Data
 
     public static function isScalar(string $attribute)
     {
-        $types = self::types();
+        $types = static::types();
         $type  = $types[$attribute] ?? null;
         switch ($type){
             case 'int':

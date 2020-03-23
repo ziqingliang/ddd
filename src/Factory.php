@@ -1,20 +1,20 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: lanzhi
+ * User: ziqing
  * Date: 2018/5/22
  * Time: 上午11:50
  */
 
-namespace lanzhi\ddd;
+namespace ziqing\ddd;
 
 
-use lanzhi\ddd\base\NewInstanceTrait;
+use ziqing\ddd\base\NewInstanceTrait;
 
 
 /**
  * Class Factory
- * @package lanzhi\ddd
+ * @package ziqing\ddd
  *
  * 领域工厂
  * 通常负责构造复杂的实体类，其输出为一个实体
