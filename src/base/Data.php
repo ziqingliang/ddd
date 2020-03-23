@@ -212,6 +212,27 @@ abstract class Data
         return $data;
     }
 
+    public function __clone()
+    {
+        $this->mandate = clone $this->mandate;
+        $data = [];
+        foreach ($this->attributes() as $attribute){
+            if($this->isEmpty($this->mandate->$attribute)){
+                continue;
+            }
+            $type = $this->attributeType($attribute);
+            if($this->isNormalType($type)){//常规类型
+            }elseif(is_string($type)){//对象类型
+                $this->mandate->$attribute = clone $this->mandate->$attribute;
+            }elseif($this->isNormalType(reset($type))){//常规数组
+            }else{//对象数组
+                foreach ($this->mandate->$attribute as $key=>$value){
+                    $this->mandate->$attribute[$key] = clone $value;
+                }
+            }
+        }
+    }
+
     /**
      * @param bool $filterNull
      * @return string

@@ -19,7 +19,9 @@
         "psr-4": {
             "ziqing\\ddd\\": "src/",
             "ziqing\\ddd\\tool\\": "Commands/",
-            "ziqing\\ddd\\scripts\\": "scripts/"
+            "ziqing\\ddd\\scripts\\": "scripts/",
+            "": "tests/",
+            "domains\\": "domains/"
         }
     },
     "bin": [
