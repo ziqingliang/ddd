@@ -263,9 +263,9 @@ trait DataGenerateTrait
 
         foreach ($this->properties as $property){
             $name = $property->name;
-            if($name=='id' && $withId===false){
-                continue;//即使定义了该属性，自动化工具也不处理
-            }
+//            if($name=='id' && $withId===false){
+//                continue;//即使定义了该属性，自动化工具也不处理
+//            }
 
             $types[]  = [$name, $property->type];
             $labels[] = [$name, $property->label ? $property->label : ucfirst($name)];
