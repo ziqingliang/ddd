@@ -121,7 +121,7 @@ abstract class Data
     }
 
     /**
-     * 不再支持 getter 方法
+     * 禁止在 getter 方法内再获取本属性，会造成递归
      * @param $attribute
      * @return mixed
      * @throws
@@ -132,7 +132,12 @@ abstract class Data
             throw new AttributeUndefined(AttributeUndefined::ACCESS_GET, [get_called_class(), $attribute]);
         }
 
-        return $this->mandate->$attribute;
+        $setter = 'get' . $attribute;
+        if($this->hasMethod($setter)){
+            call_user_func([$this, $setter]);
+        }else{
+            return $this->mandate->$attribute;
+        }
     }
 
     /**
@@ -178,6 +183,12 @@ abstract class Data
     {
         $data = [];
         foreach ($this->attributes() as $attribute){
+            $setter = 'get' . $attribute;
+            if($this->hasMethod($setter)){
+                $data[$attribute] = call_user_func([$this, $setter]);
+                continue;
+            }
+
             if($this->isEmpty($this->mandate->$attribute)){
                 if($filterNull){
                 }else{
