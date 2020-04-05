@@ -69,7 +69,6 @@ class MakeModelCommand extends Command
         $content = $this->buildFileContent($template);
 
         $this->previewOrWriteNow($filename, $content);
-
         return 0;
     }
 

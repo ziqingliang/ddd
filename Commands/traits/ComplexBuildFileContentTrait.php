@@ -36,6 +36,7 @@ trait ComplexBuildFileContentTrait
         $this->validEntityFile($filename);
 
         $this->simpleExecute($input, $output);
+        return 0;
     }
 
     protected function validEntityFile($filename)

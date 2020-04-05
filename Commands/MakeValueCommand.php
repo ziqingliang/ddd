@@ -63,7 +63,6 @@ class MakeValueCommand extends BaseCommand
         $content  = $this->buildFileContent($template);
 
         $this->previewOrWriteNow($filename, $content);
-
         return 0;
     }
 

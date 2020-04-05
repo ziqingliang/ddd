@@ -54,6 +54,7 @@ class MakeDependencyCommand extends Command
         $content = $this->simpleBuildFileContent($template);
 
         $this->previewOrWriteNow($filename, $content);
+        return 0;
     }
 
     protected function setClassName($className)
