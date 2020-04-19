@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -8,9 +9,8 @@
 
 namespace ziqing\ddd;
 
-
+use Exception;
 use ziqing\ddd\base\Data;
-use ziqing\ddd\base\who\Who;
 
 /**
  * Class Entity
@@ -23,38 +23,13 @@ use ziqing\ddd\base\who\Who;
  *
  * @property-read int $id
  *
- * @property-read string $createdAt
- * @property-read Who    $creator
- *
- * @property-read string $updatedAt
- * @property-read Who    $updater
  */
 abstract class Entity extends Data
 {
     /**
-     * @var Observer[]
+     * @var int
      */
-    private $observers = [];
-
-    /**
-     * @param Observer $observer
-     */
-    public function registerObserver(Observer $observer)
-    {
-        $this->observers[] = $observer;
-    }
-
-    /**
-     * @param Observer $observers
-     */
-    public function removeObserver(Observer $observer)
-    {
-        foreach ($this->observers as $key => $item){
-            if($observer===$item){
-                unset($this->observers[$key]);
-            }
-        }
-    }
+    private $id;
 
     /**
      * 如果一个实体还没有唯一标示，则认为此时的实体为无效的
@@ -64,90 +39,53 @@ abstract class Entity extends Data
         return (bool)$this->id;
     }
 
-    /**
-     * @return Observer[]
-     */
-    public function getObservers()
+    public function setId(int $id)
     {
-        return $this->observers;
+        $this->id = $id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     /**
      * 只要两个实体的类型相同，且 ID 相同，则就认为两个实体为同一个实体
-     * @param Entity $entity
+     * @param self $entity
      * @return bool
      */
-    final public function equalTo(Data $entity):bool
+    final public function equalTo($entity): bool
     {
-        if($this===$entity){
+        if ($this === $entity) {
             return true;
         }
 
-        if(get_class($entity)==get_called_class() && $this->id && $this->id===$entity->id){
+        if (
+            get_class($entity) == get_called_class() &&
+            $this->id &&
+            $this->id === $entity->id
+        ) {
             return true;
+        } else {
+            return false;
         }
-
-        return false;
-    }
-
-    public function __set(string $attribute, $value)
-    {
-        parent::__set($attribute, $value);
-        $this->setOneAttribute('updatedAt', date('Y-m-d H:i:s'));
-        $this->setOneAttribute('updater', Process::whoAmI());
     }
 
     public static function types(): array
     {
         return [
-            'id'        => 'int',
-            'createdAt' => 'string',
-            'updatedAt' => 'string',
-            'creator'   => Who::class,
-            'updater'   => Who::class
-        ];
-    }
-
-    public static function labels(): array
-    {
-        return [
-            'id'        => 'ID',
-            'createdAt' => '创建时间',
-            'updatedAt' => '最近更新时间',
-            'creator'   => '创建人',
-            'updater'   => '最近更新人'
-        ];
-    }
-
-    /**
-     * 由自动化工具生成
-     * id 属性只读，只能在实体类实例化时赋值
-     * @return array
-     */
-    public static function readonly():array
-    {
-        return ['id', 'createdAt', 'updatedAt', 'creator', 'updater'];
-    }
-
-    public static function defaults(): array
-    {
-        return [
-            'createdAt' => date('Y-m-d H:i:s'),
-            'updatedAt' => date('Y-m-d H:i:s'),
-            'creator'   => Process::whoAmI(),
-            'updater'   => Process::whoAmI()
+            'id' => 'int'
         ];
     }
 
     /**
      * 克隆后的实体与先前的实体虽然已经不是一个对象，但是仍然相等
      * @return Entity
-     * @throws \Exception
+     * @throws Exception
      */
     final public function __clone()
     {
         $arr = $this->toArray();
         return new static($arr);
     }
-
 }

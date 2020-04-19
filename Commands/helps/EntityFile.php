@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,7 +8,6 @@
  */
 
 namespace ziqing\ddd\tool\helps;
-
 
 use ziqing\ddd\Entity;
 
@@ -30,7 +30,7 @@ class EntityFile
      */
     public function __construct($filename)
     {
-        if(!file_exists($filename)){
+        if (!file_exists($filename)) {
             throw new \Exception("File:$filename not exists.");
         }
         $this->filename = $filename;
@@ -44,24 +44,24 @@ class EntityFile
     private function staticParse()
     {
         $namespace = '';
-        foreach (file($this->filename) as $line){
+        foreach (file($this->filename) as $line) {
             $line = trim($line);
-            if($line && substr_compare($line, 'namespace ', 0, 10)==0){
+            if ($line && substr_compare($line, 'namespace ', 0, 10) == 0) {
                 $list = preg_split("/ +/", $line);
                 $namespace = trim($list[1], " ;");
             }
-            if($line && substr_compare($line, 'class ', 0, 6)==0){
+            if ($line && substr_compare($line, 'class ', 0, 6) == 0) {
                 $list = preg_split("/ +/", $line);
                 $class = trim($list[1]);
                 $this->className = $class;
             }
             $line = trim($line, " *");
-            if($line && substr_compare($line, '@package ', 0, 8)==0){
+            if ($line && substr_compare($line, '@package ', 0, 8) == 0) {
                 $list = preg_split("/ +/", $line);
                 $package = trim($list[1]);
             }
         }
-        if(empty($class)){
+        if (empty($class)) {
             throw new \Exception("File:{$this->filename} isn't a valid class file.");
         }
 
@@ -80,7 +80,7 @@ class EntityFile
 
         //验证是否为有效的实体类文件
         $reflection = new \ReflectionClass($this->getFullClassName());
-        if(!$reflection->isSubclassOf(Entity::class)){
+        if (!$reflection->isSubclassOf(Entity::class)) {
             throw new \Exception("File:{$this->filename} is not an Entity class file.");
         }
 
@@ -119,7 +119,7 @@ class EntityFile
 
     public function getModelClassName()
     {
-        return $this->className."Model";
+        return $this->className . "Model";
     }
 
     public function getModelFullClassName()
@@ -142,7 +142,7 @@ class EntityFile
 
     public function getFactoryClassName()
     {
-        return $this->className."Factory";
+        return $this->className . "Factory";
     }
 
     public function getFactoryFullClassName()
@@ -165,7 +165,7 @@ class EntityFile
 
     public function getRepositoryClassName()
     {
-        return $this->className."Repository";
+        return $this->className . "Repository";
     }
 
     public function getRepositoryFullClassName()

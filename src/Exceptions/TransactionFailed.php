@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,7 +8,6 @@
  */
 
 namespace ziqing\ddd\Exceptions;
-
 
 class TransactionFailed extends Error
 {

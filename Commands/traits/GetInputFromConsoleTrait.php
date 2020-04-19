@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,7 +8,6 @@
  */
 
 namespace ziqing\ddd\tool\traits;
-
 
 trait GetInputFromConsoleTrait
 {
@@ -26,7 +26,7 @@ trait GetInputFromConsoleTrait
     {
         $className = $this->argument('className');
         $pattern = '/[a-zA-Z][a-zA-Z\/\\\]*/';
-        if(preg_match($pattern, $className)===false){
+        if (preg_match($pattern, $className) === false) {
             $this->error("Invalid class name:{$className}; Class name must match pattern:{$pattern}");
             die;
         }

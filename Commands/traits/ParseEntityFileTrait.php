@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -8,13 +9,9 @@
 
 namespace tools\traits;
 
-
 use ziqing\ddd\tool\traits\ComplexBuildFileContentTrait;
 
 trait ParseEntityFileTrait
 {
     use ComplexBuildFileContentTrait;
-
-
-
 }

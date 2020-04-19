@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,7 +8,6 @@
  */
 
 namespace ziqing\ddd\tool\helps;
-
 
 use ziqing\ddd\Entity;
 use ziqing\ddd\Value;
@@ -35,7 +35,7 @@ class DataType
         'value'   => '$entity->{propertyName} ? json_encode($entity->{propertyName}->toArray(), JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES): "";',
         'values'  => '$entity->{propertyName} ? self::encodeValues($entity->{propertyName}) : "";',
         'entity'  => '$entity->{propertyName} ? $entity->{propertyName}->id : 0;',
-        'entities'=> '$entity->{propertyName} ? self::encodeEntities($entity->{propertyName}) : "";'
+        'entities' => '$entity->{propertyName} ? self::encodeEntities($entity->{propertyName}) : "";'
     ];
 
     public function __construct(array $entityTypes, $entityLabels)
@@ -55,16 +55,16 @@ class DataType
      * @throws \ReflectionException
      * @throws \Exception
      */
-    public function getEntityToModelLogicCode($withId=false)
+    public function getEntityToModelLogicCode($withId = false)
     {
         $list = [];
-        foreach ($this->entityTypes as $propertyName=>$entityType){
-            if($this->isInternal($propertyName)){
+        foreach ($this->entityTypes as $propertyName => $entityType) {
+            if ($this->isInternal($propertyName)) {
                 continue;
             }
             $fieldName = $propertyName;
-            if(is_string($entityType)){
-                switch ($entityType){
+            if (is_string($entityType)) {
+                switch ($entityType) {
                     case 'int':
                     case 'integer':
                         $type = 'int';
@@ -84,19 +84,19 @@ class DataType
                         $type = 'array';
                         break;
                     default:
-                        if($this->isEntity($entityType)){
+                        if ($this->isEntity($entityType)) {
                             $fieldName = lcfirst($this->getClassName($entityType) . "Id");
                             $type = 'entity';
-                        }elseif($this->isValue($entityType)){
+                        } elseif ($this->isValue($entityType)) {
                             $type = 'value';
-                        }else{
+                        } else {
                             throw new \Exception("Unknown Entity property type:{$entityType}");
                         }
                         break;
                 }
-            }elseif(is_array($entityType)){
+            } elseif (is_array($entityType)) {
                 $entityType = reset($entityType);
-                switch ($entityType){
+                switch ($entityType) {
                     case 'int':
                     case 'integer':
                     case 'float':
@@ -108,23 +108,23 @@ class DataType
                         $type = 'array';
                         break;
                     default:
-                        if($this->isEntity($entityType)){
+                        if ($this->isEntity($entityType)) {
                             $fieldName = lcfirst($this->getClassName($entityType) . "Ids");
                             $type = 'entities';
-                        }elseif($this->isValue($entityType)){
+                        } elseif ($this->isValue($entityType)) {
                             $type = 'values';
-                        }else{
+                        } else {
                             throw new \Exception("Unknown Entity property type:{$entityType}");
                         }
                 }
             }
             $template = $this->repositoryTemplates[$type];
-            $list[] = ['$model->'.$fieldName, str_replace('{propertyName}', $propertyName, $template)];
+            $list[] = ['$model->' . $fieldName, str_replace('{propertyName}', $propertyName, $template)];
         }
         $list = $this->paddingArray($list);
         $lines = [];
         $padding = str_pad("", 8, " ");
-        foreach ($list as list($left, $right)){
+        foreach ($list as list($left, $right)) {
             $right = trim($right);
             $lines[] = "{$padding}{$left} = {$right}";
         }
@@ -134,20 +134,20 @@ class DataType
     private function paddingArray(array $list)
     {
         $max = [];
-        foreach ($list as $data){
-            foreach ($data as $index=>$item){
+        foreach ($list as $data) {
+            foreach ($data as $index => $item) {
                 $item = trim($item);
                 $length = strlen($item);
-                if(empty($max[$index])){
+                if (empty($max[$index])) {
                     $max[$index] = $length;
-                }elseif($max[$index]<$length){
+                } elseif ($max[$index] < $length) {
                     $max[$index] = $length;
                 }
             }
         }
 
-        foreach ($list as $key=>$data){
-            foreach ($data as $index=>$item){
+        foreach ($list as $key => $data) {
+            foreach ($data as $index => $item) {
                 $length = $max[$index];
                 $list[$key][$index] = str_pad($item, $length);
             }
@@ -163,13 +163,13 @@ class DataType
     public function getFieldsDefinition(int $padLength)
     {
         $definitions = [];
-        foreach ($this->entityTypes as $name=>$type){
+        foreach ($this->entityTypes as $name => $type) {
             $label = $this->entityLabels[$name];
-            if($this->isInternal($name)){
+            if ($this->isInternal($name)) {
                 continue;
             }
-            if(is_string($type)){
-                switch ($type){
+            if (is_string($type)) {
+                switch ($type) {
                     case 'int':
                     case 'integer':
                         $template = $this->templates['int'];
@@ -189,20 +189,20 @@ class DataType
                         $template = $this->templates['json'];
                         break;
                     default:
-                        if($this->isEntity($type)){
+                        if ($this->isEntity($type)) {
                             $name = lcfirst($this->getClassName($type) . "Id");
                             $template = $this->templates['int'];
-                        }elseif($this->isValue($type)){
+                        } elseif ($this->isValue($type)) {
                             $template = $this->templates['json'];
-                        }else{
+                        } else {
                             throw new \Exception("Unknown Entity property type:{$type}");
                         }
                         break;
                 }
-            }elseif(is_array($type)){
+            } elseif (is_array($type)) {
                 $type = reset($type);
-                if(!$this->isNormal($type) && !$this->isValue($type) && $this->isEntity($type)){
-                    $name = lcfirst($this->getClassName($type)."Ids");
+                if (!$this->isNormal($type) && !$this->isValue($type) && $this->isEntity($type)) {
+                    $name = lcfirst($this->getClassName($type) . "Ids");
                     $template = $this->templates['json'];
                 }
             }
@@ -221,13 +221,13 @@ class DataType
         $entityFields   = [];
         $noEntityFields = [];
 
-        foreach ($this->entityTypes as $name=>$type){
-            if($this->isInternal($name)){
+        foreach ($this->entityTypes as $name => $type) {
+            if ($this->isInternal($name)) {
                 continue;
             }
             togo:
-            if(is_string($type)){
-                switch ($type){
+            if (is_string($type)) {
+                switch ($type) {
                     case 'int':
                     case 'integer':
                     case 'bool':
@@ -239,17 +239,17 @@ class DataType
                         $noEntityFields[] = $name;
                         break;
                     default:
-                        if($this->isEntity($type)){
+                        if ($this->isEntity($type)) {
                             $entityFields[] = $name;
-                        }elseif($this->isValue($type)){
+                        } elseif ($this->isValue($type)) {
                             $noEntityFields[] = $name;
-                        }else{
+                        } else {
                             throw new \Exception("Unknown Entity property type:{$type}");
                         }
                         break;
                 }
             }
-            if(is_array($type)){
+            if (is_array($type)) {
                 $type = reset($type);
                 goto togo;
             }
@@ -259,7 +259,7 @@ class DataType
 
     private function getClassName($class)
     {
-        return substr($class, strrpos($class, '\\')+1);
+        return substr($class, strrpos($class, '\\') + 1);
     }
 
     /**
@@ -270,9 +270,9 @@ class DataType
     private function isEntity($class)
     {
         $reflection = new \ReflectionClass($class);
-        if($reflection->isSubclassOf(Entity::class)){
+        if ($reflection->isSubclassOf(Entity::class)) {
             return true;
-        }else{
+        } else {
             false;
         }
     }
@@ -285,9 +285,9 @@ class DataType
     private function isValue($class)
     {
         $reflection = new \ReflectionClass($class);
-        if($reflection->isSubclassOf(Value::class)){
+        if ($reflection->isSubclassOf(Value::class)) {
             return true;
-        }else{
+        } else {
             false;
         }
     }
@@ -309,5 +309,4 @@ class DataType
                 return false;
         }
     }
-
 }

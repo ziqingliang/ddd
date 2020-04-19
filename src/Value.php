@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -8,7 +9,7 @@
 
 namespace ziqing\ddd;
 
-use ziqing\ddd\Exceptions\UnSupported;
+use Exception;
 use ziqing\ddd\base\Data;
 
 /**
@@ -27,30 +28,19 @@ abstract class Value extends Data
      * @param Data $value
      * @param bool $strict
      * @return bool
+     * @throws Exception
      */
-    final public function equalTo(Data $value, bool $strict=true):bool
+    final public function equalTo(Data $value, bool $strict = true): bool
     {
-        if(get_class($value)!==get_called_class()){
+        if (get_class($value) !== get_called_class()) {
             return false;
         }
         $a = $this->toArray();
         $b = $value->toArray();
-        if($strict){
+        if ($strict) {
             return $a === $b;
-        }else{
+        } else {
             return $a == $b;
         }
-
     }
-
-//    public function __set(string $attribute, $value)
-//    {
-//        throw new UnSupported("can't modify properties of a Value object");
-//    }
-
-    final public static function readonly(): array
-    {
-        return [];
-    }
-
 }

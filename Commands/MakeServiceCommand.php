@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,7 +8,6 @@
  */
 
 namespace ziqing\ddd\tool;
-
 
 use Illuminate\Console\Command;
 use ziqing\ddd\tool\traits\SimpleBuildFileContentTrait;
@@ -36,6 +36,4 @@ class MakeServiceCommand extends Command
      * @var string
      */
     protected $description = 'make a Domain Service class';
-
-
 }

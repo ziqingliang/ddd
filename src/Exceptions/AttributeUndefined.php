@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -8,11 +9,9 @@
 
 namespace ziqing\ddd\Exceptions;
 
-
-
 class AttributeUndefined extends Error
 {
-    private $format = 'attribute %s undefined; can\'t %s it; ';
+    private $format = "attribute %s undefined; can't %s it; ";
 
     const ACCESS_SET = 'set';
     const ACCESS_GET = 'get';
@@ -24,12 +23,11 @@ class AttributeUndefined extends Error
      */
     public function __construct($accessWay, $attribute)
     {
-        if(is_array($attribute)){
+        if (is_array($attribute)) {
             $attribute = implode("::", $attribute);
         }
 
         $message = sprintf($this->format, $attribute, $accessWay);
         parent::__construct($message, -1, null);
     }
-
 }

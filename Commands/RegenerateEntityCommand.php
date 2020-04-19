@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,7 +8,6 @@
  */
 
 namespace ziqing\ddd\tool;
-
 
 use Illuminate\Console\Command;
 use ziqing\ddd\tool\traits\DataGeneratorTrait;
@@ -45,7 +45,7 @@ class RegenerateEntityCommand extends Command
     {
         $filename = $this->argument('entity-filename');
 
-        if(!is_file($filename)){
+        if (!is_file($filename)) {
             $this->error("File:$filename not exists!");
             die;
         }
@@ -55,10 +55,9 @@ class RegenerateEntityCommand extends Command
 
         $template = $this->getTemplate();
         $content  = $this->buildFileContent($template);
+
         $this->previewOrWriteNow($filename, $content);
 
         return 0;
     }
-
-
 }

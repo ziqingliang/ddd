@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,8 +8,6 @@
  */
 
 namespace ziqing\ddd\Exceptions;
-
-
 
 class TypeMatchFailed extends Error
 {
@@ -22,12 +21,11 @@ class TypeMatchFailed extends Error
      */
     public function __construct($varName, $expected, $given)
     {
-        if(is_array($varName)){
+        if (is_array($varName)) {
             $varName = implode("::", $varName);
         }
 
         $message = sprintf($this->format, $varName, $expected, $given);
         parent::__construct($message, -1, null);
     }
-
 }

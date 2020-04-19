@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -8,9 +9,7 @@
 
 namespace ziqing\ddd;
 
-
 use ziqing\ddd\base\NewInstanceTrait;
-
 
 /**
  * Class Factory
@@ -27,8 +26,4 @@ abstract class Factory
     {
         return NewInstanceTrait::getInstance(true);
     }
-
-    /*
-    abstract public function build():Entity;
-    */
 }

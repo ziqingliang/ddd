@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -8,8 +9,6 @@
 
 namespace ziqing\ddd\tool;
 
-
-use Illuminate\Console\Command;
 use Illuminate\Database\Capsule\Manager;
 use ziqing\ddd\tool\traits\CollectPropertiesFromConsoleTrait;
 use ziqing\ddd\tool\traits\DataGenerateTrait;
@@ -20,7 +19,7 @@ use ziqing\ddd\tool\values\Property;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MakeModelCommand extends Command
+class MakeModelCommand extends BaseCommand
 {
     use DataGenerateTrait;
     use CollectPropertiesFromConsoleTrait;
@@ -65,7 +64,7 @@ class MakeModelCommand extends Command
         $filename = $this->getFilename();
         $this->doConfirmWhenFileExists($filename);
 
-        $template = file_get_contents(__DIR__."/../templates/Model.tpl");
+        $template = file_get_contents(__DIR__ . "/../templates/Model.tpl");
         $content = $this->buildFileContent($template);
 
         $this->previewOrWriteNow($filename, $content);
@@ -75,13 +74,14 @@ class MakeModelCommand extends Command
     private function validateTableExists($table)
     {
         $this->initMysqlConnection();
-        if(!Manager::schema($this->connection)->hasTable($table)){
+        if (!Manager::schema($this->connection)->hasTable($table)) {
             $this->error("Table:$table not exists.");
             die;
         }
     }
 
     private $table;
+
     /**
      * @param string $template
      * @return string
@@ -127,15 +127,15 @@ class MakeModelCommand extends Command
         $names = Manager::schema($this->connection)->getColumnListing($table);
 
         $list = [];
-        foreach ($names as $name){
+        foreach ($names as $name) {
             $col = Manager::connection($this->connection)->getDoctrineColumn($table, $name);
-            
+
             $column = new Column();
             $column->name = $col->getName();
             $column->type = $col->getType();
             $column->default = $col->getDefault();
             $column->notNull = $col->getNotnull();
-            $column->length  = $col->getLength();
+            $column->length = $col->getLength();
             $column->comment = $col->getComment();
             $this->collectColumn($column);
             $list[] = $column->toArray();
@@ -153,28 +153,28 @@ class MakeModelCommand extends Command
         $this->columns[] = $column;
     }
 
-    protected function getProperties():string
+    protected function getProperties(): string
     {
         $map = [
             'datetime' => 'string',
-            'date'     => 'string',
-            'string'   => 'string',
-            'bigint'   => 'int',
-            'integer'  => 'int',
-            'json'     => 'string',
-            'boolean'  => 'bool',
-            'float'    => 'float',
-            'text'     => 'string',
-            'decimal'  => 'float',
-            'blob'     => 'string'
+            'date' => 'string',
+            'string' => 'string',
+            'bigint' => 'int',
+            'integer' => 'int',
+            'json' => 'string',
+            'boolean' => 'bool',
+            'float' => 'float',
+            'text' => 'string',
+            'decimal' => 'float',
+            'blob' => 'string'
         ];
 
-        foreach ($this->columns as $column){
+        foreach ($this->columns as $column) {
             $property = new Property();
             $property->name = $column->name;
 
             $type = strtolower($column->type);
-            if(empty($map[$type])){
+            if (empty($map[$type])) {
                 $this->error("Unknown property type:{$type}");
                 die;
             }
@@ -190,29 +190,16 @@ class MakeModelCommand extends Command
 
     protected function setClassName($className)
     {
-        $className = str_replace('/', '\\', $className);
-        $className = trim($className, '\\');
-        $list      = explode('\\', $className);
-        $className = array_pop($list);
-
-        if($list){
-            $namespace = '\\' . implode('\\', $list);
-        }else{
-            $namespace = '';
-        }
+        list($namespace, $className) = $this->buildNamespaceAndClass($className);
 
         $this->namespace = sprintf("infra\\models\\%s%s", $this->package, $namespace);
 
         $suffix = 'model';
-        if(substr_compare(strtolower($className), $suffix, -strlen($suffix))!==0){
+        if (substr_compare(strtolower($className), $suffix, -strlen($suffix)) !== 0) {
             $className = $className . "Model";
         }
 
         $this->className = $className;
         return $this;
     }
-
-
-
 }
-

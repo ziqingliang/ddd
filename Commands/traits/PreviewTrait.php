@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -8,18 +9,17 @@
 
 namespace ziqing\ddd\tool\traits;
 
-
 trait PreviewTrait
 {
     protected function previewOrWriteNow($filename, $content)
     {
-        if($this->option('preview')){
+        if ($this->option('preview')) {
             echo $content;
             $this->info("There nothing has been done");
             return false;
-        }else{
+        } else {
             $dir = dirname($filename);
-            if(!is_dir($dir) && !mkdir($dir, 0777, true)){
+            if (!is_dir($dir) && !mkdir($dir, 0777, true)) {
                 $this->alert("Can't make dir:{$dir}");
             }
             file_put_contents($filename, $content);
@@ -30,20 +30,20 @@ trait PreviewTrait
 
     protected function doConfirmWhenFileExists($filename)
     {
-        if($this->hasOption('preview') && $this->option('preview')){
+        if ($this->hasOption('preview') && $this->option('preview')) {
             return false;
         }
-        if($this->hasOption('force') && $this->option('force')){
+        if ($this->hasOption('force') && $this->option('force')) {
             return false;
         }
-        if(!file_exists($filename)){
+        if (!file_exists($filename)) {
             return false;
         }
         $this->warn("File:$filename already exists.");
-        if(!$this->confirm("You will override it?")){
+        if (!$this->confirm("You will override it?")) {
             $this->info("Nothing has done.");
             die ;
-        }else{
+        } else {
             $this->warn("File:$filename will be override!!!");
             return true;
         }

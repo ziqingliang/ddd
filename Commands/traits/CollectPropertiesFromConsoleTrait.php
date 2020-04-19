@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -8,7 +9,6 @@
 
 namespace ziqing\ddd\tool\traits;
 
-
 use ziqing\ddd\tool\values\Property;
 
 trait CollectPropertiesFromConsoleTrait
@@ -16,8 +16,8 @@ trait CollectPropertiesFromConsoleTrait
     protected function collectPropertiesFromConsole()
     {
         $again = false;
-        while(true){
-            if($again && !$this->confirm("Add one more?", false)){
+        while (true) {
+            if ($again && !$this->confirm("Add one more?", false)) {
                 break;
             }
 
@@ -25,14 +25,8 @@ trait CollectPropertiesFromConsoleTrait
 
             $property->name  = $this->addPropertyName();
             $property->type  = $this->addPropertyType();
-            $property->label = $this->ask("label?");
             $property->description = $this->ask("description?");
             $property->default     = $this->ask("Has one default value?");
-            if($this->generatorType=='values'){
-                $property->isReadonly = false;
-            }else{
-                $property->isReadonly  = $this->confirm("Is this property readonly?", false);
-            }
 
             $this->addOneProperty($property);
             $again = true;
@@ -43,13 +37,13 @@ trait CollectPropertiesFromConsoleTrait
     {
         $pattern = '/[a-zA-z_][a-zA-Z_0-9]*/';
         $again = false;
-        while(true){
-            if($again){
+        while (true) {
+            if ($again) {
                 $this->warn("You must assign a name of one property!");
             }
 
             $name = $this->ask("name");
-            if(preg_match($pattern, $name)!==false){
+            if (preg_match($pattern, $name) !== false) {
                 return $name;
             }
 
@@ -62,13 +56,13 @@ trait CollectPropertiesFromConsoleTrait
     {
         $pattern = '/[a-zA-z][a-zA-Z_0-9]*/';
         $again = false;
-        while(true){
-            if($again){
+        while (true) {
+            if ($again) {
                 $this->warn("You must assign the type of one property!");
             }
 
             $type = $this->anticipate("type", ['int', 'float', 'bool', 'string', 'array']);
-            if(preg_match($pattern, $type)!==false){
+            if (preg_match($pattern, $type) !== false) {
                 return $type;
             }
             $this->warn("Invalid type:{$type}; The type must be a valid data type.");

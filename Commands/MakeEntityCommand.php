@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,7 +8,6 @@
  */
 
 namespace ziqing\ddd\tool;
-
 
 use ziqing\ddd\tool\traits\CollectPropertiesFromConsoleTrait;
 use ziqing\ddd\tool\traits\DataGenerateTrait;
@@ -25,6 +25,7 @@ class MakeEntityCommand extends BaseCommand
     use CollectPropertiesFromConsoleTrait;
     use PreviewTrait;
 
+    protected $classNameSuffix = '';
     protected $generatorType = 'entities';
 
     /**
@@ -55,17 +56,14 @@ class MakeEntityCommand extends BaseCommand
         $filename = $this->getFilename();
         $this->doConfirmWhenFileExists($filename);
 
-        if($this->confirm("Do you want to add an attribute now?")){
+        if ($this->confirm("Do you want to add an attribute now?")) {
             $this->collectPropertiesFromConsole();
         }
 
-        $template = file_get_contents(__DIR__."/../templates/Entity.tpl");
+        $template = file_get_contents(__DIR__ . "/../templates/Entity.tpl");
         $content  = $this->buildFileContent($template);
 
         $this->previewOrWriteNow($filename, $content);
         return 0;
     }
-
-
-
 }

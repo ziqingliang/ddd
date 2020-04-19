@@ -1,12 +1,13 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
  * Date: 2018/5/30
  * Time: 下午4:08
  */
-namespace ziqing\ddd\tool\traits;
 
+namespace ziqing\ddd\tool\traits;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,7 +29,7 @@ trait SimpleBuildFileContentTrait
         $filename = $this->getFilename();
         $this->doConfirmWhenFileExists($filename);
 
-        $template = file_get_contents(__DIR__."/../../templates/{$this->classNameSuffix}.tpl");
+        $template = file_get_contents(__DIR__ . "/../../templates/{$this->classNameSuffix}.tpl");
         $content = $this->simpleBuildFileContent($template);
 
         $this->previewOrWriteNow($filename, $content);

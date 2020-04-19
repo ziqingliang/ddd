@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,7 +8,6 @@
  */
 
 namespace ziqing\ddd\tool;
-
 
 use ziqing\ddd\tool\traits\CollectPropertiesFromConsoleTrait;
 use ziqing\ddd\tool\traits\DataGenerateTrait;
@@ -26,6 +26,7 @@ class MakeValueCommand extends BaseCommand
     use PreviewTrait;
 
     protected $generatorType = 'values';
+    protected $classNameSuffix = '';
 
     /**
      * The name and signature of the console command.
@@ -55,15 +56,14 @@ class MakeValueCommand extends BaseCommand
         $filename = $this->getFilename();
         $this->doConfirmWhenFileExists($filename);
 
-        if($this->confirm("Do you want to add an attribute now?")){
+        if ($this->confirm("Do you want to add an attribute now?")) {
             $this->collectPropertiesFromConsole();
         }
 
-        $template = file_get_contents(__DIR__."/../templates/Value.tpl");
+        $template = file_get_contents(__DIR__ . "/../templates/Value.tpl");
         $content  = $this->buildFileContent($template);
 
         $this->previewOrWriteNow($filename, $content);
         return 0;
     }
-
 }

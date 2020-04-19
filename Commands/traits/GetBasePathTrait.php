@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -8,24 +9,23 @@
 
 namespace ziqing\ddd\tool\traits;
 
-
 trait GetBasePathTrait
 {
     protected $basePath;
 
     private function getBasePath()
     {
-        if($this->hasOption('base-path')){
+        if ($this->hasOption('base-path')) {
             $basePath = $this->option('base-path');
         }
         $basePath = $basePath ?? getcwd();
 
-        if(!is_dir($basePath)){
+        if (!is_dir($basePath)) {
             $this->error("Invalid path:{$basePath}");
             die;
         }
 
-        if(!is_writable($basePath)){
+        if (!is_writable($basePath)) {
             $this->error("Not writable path:{$basePath}");
             die;
         }

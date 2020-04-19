@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,7 +8,6 @@
  */
 
 namespace ziqing\ddd\base;
-
 
 use Illuminate\Container\Container;
 
@@ -20,13 +20,13 @@ use Illuminate\Container\Container;
  */
 trait NewInstanceTrait
 {
-    public static function getInstance(bool $isNew=false)
+    public static function getInstance(bool $isNew = false)
     {
         $class = get_called_class();
         $container = Container::getInstance();
-        if($isNew){
+        if ($isNew) {
             $instance = $container->make($class);
-        }elseif(!$container->has($class)){
+        } elseif (!$container->has($class)) {
             $container->singleton($class, $class);
         }
 
@@ -38,6 +38,5 @@ trait NewInstanceTrait
 
     public function init()
     {
-
     }
 }

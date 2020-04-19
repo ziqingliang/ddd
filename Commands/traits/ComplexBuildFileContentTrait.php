@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -8,14 +9,13 @@
 
 namespace ziqing\ddd\tool\traits;
 
-
 use ziqing\ddd\Entity;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 trait ComplexBuildFileContentTrait
 {
-    use SimpleBuildFileContentTrait{
+    use SimpleBuildFileContentTrait {
         execute as simpleExecute;
         simpleBuildFileContent as xxBuildFileContent;
     }
@@ -27,7 +27,7 @@ trait ComplexBuildFileContentTrait
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $filename = $this->argument('entity-filename');
-        if(!is_file($filename)){
+        if (!is_file($filename)) {
             $this->error("File:$filename not exists!");
             die;
         }
@@ -42,13 +42,13 @@ trait ComplexBuildFileContentTrait
     protected function validEntityFile($filename)
     {
         include $filename;
-        try{
+        try {
             $reflection = new \ReflectionClass($this->entityFullClassName);
-            if(!$reflection->isSubclassOf(Entity::class)){
+            if (!$reflection->isSubclassOf(Entity::class)) {
                 $this->error("File:$filename is not an Entity file.");
                 die;
             }
-        }catch (\Throwable $exception){
+        } catch (\Throwable $exception) {
             $error = sprintf("Error:%s; file:%s:%s", $exception->getMessage(), $exception->getFile(), $exception->getLine());
             $this->error($error);
             die;
@@ -58,25 +58,24 @@ trait ComplexBuildFileContentTrait
     private function parseEntityFile($filename)
     {
         $namespace = '';
-        foreach (file($filename) as $line){
+        foreach (file($filename) as $line) {
             $line = trim($line);
-            if($line && substr_compare($line, 'namespace ', 0, 10)==0){
+            if ($line && substr_compare($line, 'namespace ', 0, 10) == 0) {
                 $list = preg_split("/ +/", $line);
                 $namespace = trim($list[1], " ;");
             }
-            if($line && substr_compare($line, 'class ', 0, 6)==0){
+            if ($line && substr_compare($line, 'class ', 0, 6) == 0) {
                 $list = preg_split("/ +/", $line);
                 $class = trim($list[1]);
                 $this->className = $class;
             }
             $line = trim($line, " *");
-            if($line && substr_compare($line, '@package ', 0, 8)==0){
-
+            if ($line && substr_compare($line, '@package ', 0, 8) == 0) {
                 $list = preg_split("/ +/", $line);
                 $package = trim($list[1]);
             }
         }
-        if(empty($class)){
+        if (empty($class)) {
             $this->error("This isn't a valid class file. ");
             die;
         }
@@ -100,5 +99,4 @@ trait ComplexBuildFileContentTrait
         ];
         return str_replace($searches, $replaces, $template);
     }
-
 }

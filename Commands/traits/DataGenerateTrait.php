@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -18,18 +19,7 @@ trait DataGenerateTrait
     private $properties = [];
     private $noteProperties;
     private $types;
-    private $labels;
-    private $readonly;
     private $defaults;
-
-//    protected $generatorType = '';
-
-    protected function setProperties(array $properties)
-    {
-        $this->hasBuild = false;
-        $this->properties = $properties;
-        return $this;
-    }
 
     protected function addOneProperty(Property $property)
     {
@@ -43,84 +33,66 @@ trait DataGenerateTrait
         return $this->properties[$name] ?? null;
     }
 
-    protected function getNoteProperties():string
+    protected function getNoteProperties(): string
     {
         $list = $this->noteProperties;
         $list = $this->paddingArray($list);
         $lines = [];
-        foreach ($list as list($modifier, $type, $name, $label, $description)){
-            if(trim($description)!='' && trim($label)==''){
-                $label = str_pad(ucfirst(trim($name)), strlen($label));
-            }
-            $line = "{$modifier} {$type} \${$name} {$label} {$description}";
+        foreach ($list as list($modifier, $type, $name, $description)) {
+            $line = "{$modifier} {$type} \${$name} {$description}";
             $line = trim($line);
             $line = " * @{$line}";
             $lines[] = $line;
         }
 
-        if($lines){
+        if ($lines) {
             return implode("\n", $lines);
-        }else{
+        } else {
             return " * todo: define other properties here";
         }
     }
 
-    private function getNoteReadonly():string
-    {
-        $lines = [];
-        foreach ($this->readonly as $name){
-            $line = " * @readonly \${$name}";
-            $lines[] = $line;
-        }
-
-        if($lines){
-            return implode("\n", $lines);
-        }else{
-            return " * ";
-        }
-    }
-
-    private function getNoteDefaults():string
+    private function getNoteDefaults(): string
     {
         $lines = [];
         $list = $this->defaults;
-        foreach ($list as $key=>list($name, $value)){
-            if($value===true){
+        foreach ($list as $key => list($name, $value)) {
+            if ($value === true) {
                 $list[$key][1] = 'true';
             }
         }
         $list = $this->paddingArray($list);
 
-        foreach ($list as list($name, $value)){
+        foreach ($list as list($name, $value)) {
             $line = " * @default \${$name} {$value}";
             $lines[] = $line;
         }
 
-        if($lines){
+        if ($lines) {
             return implode("\n", $lines);
-        }else{
+        } else {
             return " * ";
         }
     }
 
-    private function getStaticTypes():string
+    private function getStaticTypes(): string
     {
         $list = $this->types;
         $lines = [];
-        foreach ($list as $index=>list($name, $type)){
+        foreach ($list as $index => list($name, $type)) {
             $list[$index][0] = "'{$name}'";
 
             $type = trim($type);
-            if(substr_compare($type, '[]', -2)==0){
+            if (substr_compare($type, '[]', -2) == 0) {
                 $type = trim($type, '[]');
-                if($this->isScalar($type) || $type=='array' || $type=='object'){
+                if ($this->isScalar($type) || $type == 'array' || $type == 'object') {
                     $type = "['$type']";
-                }else{
+                } else {
                     $type = "[{$type}::class]";
                 }
-            }elseif($this->isScalar($type) || $type=='array' || $type=='object'){
+            } elseif ($this->isScalar($type) || $type == 'array' || $type == 'object') {
                 $type = "'{$type}'";
-            }else{
+            } else {
                 $type = "{$type}::class";
             }
             $list[$index][1] = $type;
@@ -128,68 +100,28 @@ trait DataGenerateTrait
 
         $padding = str_pad("", 12);
         $list = $this->paddingArray($list);
-        foreach ($list as list($name, $type)){
+        foreach ($list as list($name, $type)) {
             $type  = trim($type);
 
             $line  = "{$padding}{$name} => {$type},";
             $lines[] = $line;
         }
 
-        if($lines){
+        if ($lines) {
             return implode("\n", $lines);
-        }else{
+        } else {
             return "{$padding}//todo: ...";
         }
     }
 
-    private function getStaticLabels():string
-    {
-        $list = $this->labels;
-        foreach ($list as $index=>list($name, $label)) {
-            $list[$index][0] = "'{$name}'";
-            $list[$index][1] = "'{$label}'";
-        }
-        $list = $this->paddingArray($list);
-
-        $lines = [];
-        $padding = str_pad("", 12);
-        foreach ($list as list($name, $label)){
-            $label = trim($label);
-            $line  = "{$padding}{$name} => {$label},";
-            $lines[] = $line;
-        }
-
-        if($lines){
-            return implode("\n", $lines);
-        }else{
-            return "{$padding}//todo: ...";
-        }
-    }
-
-    private function getStaticReadonly():string
-    {
-        $list = $this->readonly;
-        $lines = [];
-        foreach ($list as $name){
-            $lines[] = "'{$name}'";
-        }
-
-        $padding = str_pad("", 12);
-        if($lines){
-            return $padding . implode(",", $lines);
-        }else{
-            return "{$padding}//here no readonly property";
-        }
-    }
-
-    private function getStaticDefaults():string
+    private function getStaticDefaults(): string
     {
         $list = $this->defaults;
-        foreach ($list as $index=>list($name, $default)){
+        foreach ($list as $index => list($name, $default)) {
             $list[$index][0] = "'{$name}'";
-            if(is_bool($default)){
+            if (is_bool($default)) {
                 $list[$index][1] = 'true';
-            }elseif(!is_int($default) && !is_float($default)){
+            } elseif (!is_int($default) && !is_float($default)) {
                 $list[$index][1] = "'{$default}'";
             }
         }
@@ -197,15 +129,15 @@ trait DataGenerateTrait
         $padding = str_pad("", 12);
         $list = $this->paddingArray($list);
         $lines = [];
-        foreach ($list as list($name, $default)){
+        foreach ($list as list($name, $default)) {
             $default = trim($default);
             $line = "{$padding}{$name} => {$default},";
             $lines[] = $line;
         }
 
-        if($lines){
+        if ($lines) {
             return implode("\n", $lines);
-        }else{
+        } else {
             return "{$padding}//here no default value";
         }
     }
@@ -223,11 +155,9 @@ trait DataGenerateTrait
             '{{className}}',
             '{{package}}',
             '{{properties}}',
-            '{{readonly}}',
+            '{{propertie-defines}}',
             '{{defaults}}',
             '{{static-types}}',
-            '{{static-labels}}',
-            '{{static-readonly}}',
             '{{static-defaults}}'
         ];
 
@@ -236,58 +166,59 @@ trait DataGenerateTrait
             $this->getClassName(),
             $this->getPackage(),
             $this->getNoteProperties(),
-            $this->getNoteReadonly(),
+            $this->getPropertyDefines(),
             $this->getNoteDefaults(),
             $this->getStaticTypes(),
-            $this->getStaticLabels(),
-            $this->getStaticReadonly(),
             $this->getStaticDefaults()
         ];
 
         return str_replace($searches, $replaces, $template);
     }
 
+    private function getPropertyDefines()
+    {
+        $list = $this->noteProperties;
+        $list = $this->paddingArray($list);
+        $lines = [];
+        foreach ($list as list($modifier, $type, $name, $description)) {
+            $lines[] = sprintf('    public $%s;', $name);
+        }
+
+        if ($lines) {
+            return implode("\n", $lines);
+        } else {
+            return "";
+        }
+    }
+
     private $hasBuild = false;
 
-    private function buildFromProperties($withId=false)
+    private function buildFromProperties()
     {
-        if($this->hasBuild){
+        if ($this->hasBuild) {
             return ;
         }
 
         $properties = [];
         $types = [];
-        $labels = [];
-        $readonly = [];
         $defaults = [];
 
-        foreach ($this->properties as $property){
+        foreach ($this->properties as $property) {
             $name = $property->name;
-//            if($name=='id' && $withId===false){
-//                continue;//即使定义了该属性，自动化工具也不处理
-//            }
-
             $types[]  = [$name, $property->type];
-            $labels[] = [$name, $property->label ? $property->label : ucfirst($name)];
 
             $modifier = 'property';
-            if($property->isReadonly){
-                $readonly[] = $name;
-                $modifier = 'property-read';
-            }
 
             $default = $this->isDefaultValueValid($property->type, $property->default);
-            if($default!==false){
+            if ($default !== false) {
                 $defaults[] = [$name, $default];
             }
 
-            $properties[] = [$modifier, $property->type, $property->name, $property->label, $property->description];
+            $properties[] = [$modifier, $property->type, $property->name, $property->description];
         }
 
         $this->noteProperties = $properties;
         $this->types    = $types;
-        $this->labels   = $labels;
-        $this->readonly = $readonly;
         $this->defaults = $defaults;
 
         $this->hasBuild = true;
@@ -297,7 +228,7 @@ trait DataGenerateTrait
     {
         $scalars = [
             'int'    => 0,
-            'integer'=> 0,
+            'integer' => 0,
             'float'  => 0.0,
             'double' => 0.0,
             'bool'   => false,
@@ -309,30 +240,30 @@ trait DataGenerateTrait
 
     private function isDefaultValueValid($type, $value)
     {
-        if($value==='' || $value===null){
+        if ($value === '' || $value === null) {
             return false;
         }
 
-        if(!$this->isScalar($type)){
+        if (!$this->isScalar($type)) {
             return false;
         }
 
-        switch ($type){
+        switch ($type) {
             case 'int':
             case 'integer':
                 $value = (int)$value;
-                if($value===0){
+                if ($value === 0) {
                     return false;
-                }else{
+                } else {
                     return $value;
                 }
                 break;
             case 'float':
             case 'double':
                 $value = (float)$value;
-                if($value===0.0){
+                if ($value === 0.0) {
                     return false;
-                }else{
+                } else {
                     return $value;
                 }
                 break;
@@ -341,9 +272,9 @@ trait DataGenerateTrait
                 break;
             case 'bool':
             case 'boolean':
-                if($value==='true'){
+                if ($value === 'true') {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
         }
@@ -352,22 +283,22 @@ trait DataGenerateTrait
     private function paddingArray(array $list)
     {
         $max = [];
-        foreach ($list as $data){
-            foreach ($data as $index=>$item){
+        foreach ($list as $data) {
+            foreach ($data as $index => $item) {
                 $item = trim($item);
                 $length = strlen($item);
-                if(empty($max[$index])){
+                if (empty($max[$index])) {
                     $max[$index] = $length;
-                }elseif($max[$index]<$length){
+                } elseif ($max[$index] < $length) {
                     $max[$index] = $length;
                 }
             }
         }
 
-        foreach ($list as $key=>$data){
-            foreach ($data as $index=>$item){
+        foreach ($list as $key => $data) {
+            foreach ($data as $index => $item) {
                 $length = $max[$index];
-                $list[$key][$index] = str_pad($item, $length);
+                $list[$key][$index] = rtrim(str_pad($item, $length));
             }
         }
 

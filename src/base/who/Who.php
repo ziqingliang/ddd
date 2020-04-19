@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,7 +8,6 @@
  */
 
 namespace ziqing\ddd\base\who;
-
 
 use ziqing\ddd\Value;
 
@@ -21,22 +21,23 @@ use ziqing\ddd\Value;
  */
 class Who extends Value
 {
-    protected const ID_GUEST   = -1;
+    public $id;
+    public $name;
+    public $description;
 
-    protected const ID_CONSOLE = -12;
-    protected const ID_TIMER   = -13;
-    protected const ID_JOBBER  = -14;
-
-    protected const ID_AUTHOR  = 0;
+    const ID_GUEST   = -11;
+    const ID_CONSOLE = -12;
+    const ID_TIMER   = -13;
+    const ID_JOBBER  = -14;
 
     /**
      * @param int $id
      * @param string|null $name
-     * @return Author|Console|Guest|Jobber|Timer
+     * @return Console|Guest|Jobber|Timer|self
      */
-    public static function getById(int $id, string $name=null)
+    public static function create(int $id, string $name = null)
     {
-        switch ($id){
+        switch ($id) {
             case self::ID_GUEST:
                 return new Guest();
                 break;
@@ -50,17 +51,8 @@ class Who extends Value
                 return new Jobber();
                 break;
             default:
-                return new Author(['id'=>$id, 'name'=>$name]);
+                return new self(['id' => $id, 'name' => $name]);
         }
-    }
-
-    public static function labels(): array
-    {
-        return [
-            'id'          => 'ID',
-            'name'        => '用户名',
-            'description' => '用户描述'
-        ];
     }
 
     public static function types(): array

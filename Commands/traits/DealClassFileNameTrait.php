@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -7,7 +8,6 @@
  */
 
 namespace ziqing\ddd\tool\traits;
-
 
 trait DealClassFileNameTrait
 {
@@ -23,23 +23,16 @@ trait DealClassFileNameTrait
 
     protected function setClassName($className)
     {
-        $className = str_replace('/', '\\', $className);
-        $className = trim($className, '\\');
-        $list = explode('\\', $className);
-        $className = array_pop($list);
-
-        if($list){
-            $namespace = '\\' . implode('\\', $list);
-        }else{
-            $namespace = '';
-        }
+        list($namespace, $className) = $this->buildNamespaceAndClass($className);
 
         $this->namespace = sprintf("domains\\%s\\%s%s", $this->package, $this->generatorType, $namespace);
 
-        if(
-            !empty($this->classNameSuffix) &&
-            substr_compare(strtolower($className), strtolower($this->classNameSuffix), -strlen($this->classNameSuffix))!==0
-        ){
+        $mark = substr_compare(
+            strtolower($className),
+            strtolower($this->classNameSuffix),
+            -strlen($this->classNameSuffix)
+        );
+        if (!empty($this->classNameSuffix) && $mark !== 0) {
             $className = $className . ucfirst($this->classNameSuffix);
         }
 
@@ -47,17 +40,17 @@ trait DealClassFileNameTrait
         return $this;
     }
 
-    private function getNamespace():string
+    private function getNamespace(): string
     {
         return $this->namespace ?? '';
     }
 
-    protected function getPackage():string
+    protected function getPackage(): string
     {
         return $this->package ?? '';
     }
 
-    protected function getClassName():string
+    protected function getClassName(): string
     {
         return $this->className ?? '';
     }

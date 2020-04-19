@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: ziqing
@@ -8,19 +9,12 @@
 
 namespace ziqing\ddd\tool;
 
-
-use Illuminate\Console\Command;
-use Illuminate\Database\Capsule\Manager;
-use ziqing\ddd\tool\traits\CollectPropertiesFromConsoleTrait;
-use ziqing\ddd\tool\traits\DataGenerateTrait;
 use ziqing\ddd\tool\traits\DealClassFileNameTrait;
 use ziqing\ddd\tool\traits\PreviewTrait;
-use ziqing\ddd\tool\values\Column;
-use ziqing\ddd\tool\values\Property;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MakeDependencyCommand extends Command
+class MakeDependencyCommand extends BaseCommand
 {
     use DealClassFileNameTrait;
     use PreviewTrait;
@@ -50,7 +44,7 @@ class MakeDependencyCommand extends Command
         $filename = $this->getFilename();
         $this->doConfirmWhenFileExists($filename);
 
-        $template = file_get_contents(__DIR__."/../templates/Dependency.tpl");
+        $template = file_get_contents(__DIR__ . "/../templates/Dependency.tpl");
         $content = $this->simpleBuildFileContent($template);
 
         $this->previewOrWriteNow($filename, $content);
@@ -59,27 +53,15 @@ class MakeDependencyCommand extends Command
 
     protected function setClassName($className)
     {
-        $className = str_replace('/', '\\', $className);
-        $className = trim($className, '\\');
-        $list      = explode('\\', $className);
-        $className = array_pop($list);
-
-        if($list){
-            $namespace = '\\' . implode('\\', $list);
-        }else{
-            $namespace = '';
-        }
-
+        list($namespace, $className) = $this->buildNamespaceAndClass($className);
         $this->namespace = sprintf("infra\\dependencies%s", $namespace);
 
         $suffix = 'Dependency';
-        if(substr_compare(strtolower($className), strtolower($suffix), -strlen($suffix))!==0){
+        if (substr_compare(strtolower($className), strtolower($suffix), -strlen($suffix)) !== 0) {
             $className = $className . $suffix;
         }
 
         $this->className = $className;
         return $this;
     }
-
 }
-
