@@ -9,10 +9,9 @@
 
 namespace ziqing\ddd\tool;
 
-use Illuminate\Console\Command;
 use ziqing\ddd\tool\traits\SimpleBuildFileContentTrait;
 
-class MakeServiceCommand extends Command
+class MakeServiceCommand extends BaseCommand
 {
     use SimpleBuildFileContentTrait;
 

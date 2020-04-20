@@ -47,7 +47,7 @@ trait DataGeneratorTrait
 //            print_r($this->lines);die;
             $this->replacePublicProperty();
             //replace static method's body
-            $types = ['types', 'labels', 'readonly', 'defaults'];
+            $types = ['types'];
             foreach ($types as $type) {
                 if ($reflection->hasMethod($type)) {
                     $method = $reflection->getMethod($type);
@@ -69,6 +69,9 @@ trait DataGeneratorTrait
     protected function getTemplate()
     {
         ksort($this->lines);
+        foreach ($this->lines as &$line) {
+            $line = rtrim($line) . "\n";
+        }
         return implode('', $this->lines);
     }
 
@@ -96,15 +99,11 @@ trait DataGeneratorTrait
             $this->lines[$index - 1] = <<<'TXT'
 {{properties}}
  *
-{{defaults}}
-
 TXT;
         } else {
             $this->lines[$index - 1] = <<<'TXT'
 {{properties}}
  *
-{{defaults}}
-
 TXT;
         }
     }
@@ -114,6 +113,9 @@ TXT;
         $list = $this->properties;
         $lines = [];
         foreach ($list as $name => $property) {
+            if ($this->generatorType !== 'values' && $name == 'id') {
+                continue;
+            }
             $lines[] = sprintf('    public $%s;', $name);
         }
 
@@ -128,7 +130,6 @@ TXT;
     {
         $map = [
             'types' => "{{static-types}}\n",
-            'defaults' => "{{static-defaults}}\n"
         ];
         $mark = false;
         foreach ($this->lines as $index => $line) {

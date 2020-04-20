@@ -2,7 +2,6 @@
 
 namespace {{namespace}};
 
-
 use ziqing\ddd\base\conditions\IdCondition;
 use ziqing\ddd\Entity;
 use ziqing\ddd\Exceptions\AddFailed;
@@ -23,7 +22,7 @@ use {{entityFullClassName}};
 class {{className}} extends Repository
 {
     /**
-     * you can define your dependency here
+     * you can inject your dependency here
      * {{className}} constructor.
      */
     public function __construct()

@@ -2,7 +2,6 @@
 
 namespace {{namespace}};
 
-
 use ziqing\ddd\Value;
 
 /**
@@ -11,14 +10,14 @@ use ziqing\ddd\Value;
  *
 {{properties}}
  *
-{{defaults}}
  */
 class {{className}} extends Value
 {
+{{propertie-defines}}
     /**
      * 可以由命令行工具根据类注解生成
      *
-     * Command: domain regen:value {value-filename} --sub-domain={sub-domain}
+     * Command: ddd regen:value {value-file-path}
      *
      * configure like this:
      * ```php
@@ -39,30 +38,9 @@ class {{className}} extends Value
     }
 
     /**
-     * 不在该列表内的属性将被忽略
-     *
      * 可以由命令行工具根据类注解生成
      *
-     * Command: domain regen:value {value-filename} --sub-domain={sub-domain}
-     *
-     * @return array
-     * ```php
-     * [
-     *     'name'=>'名称'
-     * ]
-     * ```
-     */
-    public static function labels(): array
-    {
-        return [
-{{static-labels}}
-        ];
-    }
-
-    /**
-     * 可以由命令行工具根据类注解生成
-     *
-     * Command: domain regen:value {value-filename} --sub-domain={sub-domain}
+     * Command: ddd regen:value {value-file-path}
      *
      * 设置实体属性的默认值
      * @return array
@@ -70,7 +48,7 @@ class {{className}} extends Value
     public static function defaults(): array
     {
         return [
-{{static-defaults}}
+            //you cann add defaults here
         ];
     }
 }

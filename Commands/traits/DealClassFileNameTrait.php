@@ -17,14 +17,13 @@ trait DealClassFileNameTrait
 
     protected function setPackage($package)
     {
-        $this->package = ucfirst(strtolower($package));
+        $this->package = strtolower($package);
         return $this;
     }
 
     protected function setClassName($className)
     {
         list($namespace, $className) = $this->buildNamespaceAndClass($className);
-
         $this->namespace = sprintf("domains\\%s\\%s%s", $this->package, $this->generatorType, $namespace);
 
         $mark = substr_compare(

@@ -2,7 +2,6 @@
 
 namespace {{namespace}};
 
-
 use ziqing\ddd\Service;
 
 /**
@@ -16,7 +15,7 @@ use ziqing\ddd\Service;
 class {{className}} extends Service
 {
     /**
-     * you can define your dependency here
+     * you can inject your dependency here
      * {{className}} constructor.
      */
     public function __construct()

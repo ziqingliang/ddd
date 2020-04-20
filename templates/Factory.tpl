@@ -2,7 +2,6 @@
 
 namespace {{namespace}};
 
-
 use ziqing\ddd\Entity;
 use ziqing\ddd\Factory;
 use {{entityFullClassName}};
@@ -18,7 +17,7 @@ use {{entityFullClassName}};
 class {{className}} extends Factory
 {
     /**
-     * you can define your dependency here
+     * you can inject your dependency here
      * {{className}} constructor.
      */
     public function __construct()

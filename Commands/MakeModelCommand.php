@@ -180,7 +180,6 @@ class MakeModelCommand extends BaseCommand
             }
             $property->type = $map[$type];
             $property->default = $column->default;
-            $property->label = $column->comment;
             $this->addOneProperty($property);
         }
 

@@ -26,7 +26,6 @@ trait CollectPropertiesFromConsoleTrait
             $property->name  = $this->addPropertyName();
             $property->type  = $this->addPropertyType();
             $property->description = $this->ask("description?");
-            $property->default     = $this->ask("Has one default value?");
 
             $this->addOneProperty($property);
             $again = true;

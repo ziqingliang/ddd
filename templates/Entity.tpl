@@ -2,7 +2,6 @@
 
 namespace {{namespace}};
 
-
 use ziqing\ddd\Entity;
 
 /**
@@ -11,7 +10,6 @@ use ziqing\ddd\Entity;
  *
 {{properties}}
  *
-{{defaults}}
  */
 class {{className}} extends Entity
 {
@@ -20,7 +18,7 @@ class {{className}} extends Entity
     /**
      * 可以由命令行工具根据类注解生成
      *
-     * Command: ddd regen:entity {entity-filename} --sub-domain={sub-domain}
+     * Command: ddd regen:entity {entity-file-path}
      *
      * configure like this:
      * ```php
@@ -44,7 +42,7 @@ class {{className}} extends Entity
     /**
      * 可以由命令行工具根据类注解生成
      *
-     * Command: ddd regen:entity {entity-filename} --sub-domain={sub-domain}
+     * Command: ddd regen:entity {entity-file-path}
      *
      * 设置实体属性的默认值
      * @return array
@@ -52,7 +50,7 @@ class {{className}} extends Entity
     public static function defaults(): array
     {
         return array_merge(parent::defaults(), [
-{{static-defaults}}
+            //you cann add defaults here
         ]);
     }
 }

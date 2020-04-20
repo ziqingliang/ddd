@@ -19,7 +19,6 @@ trait DataGenerateTrait
     private $properties = [];
     private $noteProperties;
     private $types;
-    private $defaults;
 
     protected function addOneProperty(Property $property)
     {
@@ -39,6 +38,9 @@ trait DataGenerateTrait
         $list = $this->paddingArray($list);
         $lines = [];
         foreach ($list as list($modifier, $type, $name, $description)) {
+            if ($this->generatorType !== 'values' && $name == 'id') {
+                continue;
+            }
             $line = "{$modifier} {$type} \${$name} {$description}";
             $line = trim($line);
             $line = " * @{$line}";
@@ -49,29 +51,6 @@ trait DataGenerateTrait
             return implode("\n", $lines);
         } else {
             return " * todo: define other properties here";
-        }
-    }
-
-    private function getNoteDefaults(): string
-    {
-        $lines = [];
-        $list = $this->defaults;
-        foreach ($list as $key => list($name, $value)) {
-            if ($value === true) {
-                $list[$key][1] = 'true';
-            }
-        }
-        $list = $this->paddingArray($list);
-
-        foreach ($list as list($name, $value)) {
-            $line = " * @default \${$name} {$value}";
-            $lines[] = $line;
-        }
-
-        if ($lines) {
-            return implode("\n", $lines);
-        } else {
-            return " * ";
         }
     }
 
@@ -114,34 +93,6 @@ trait DataGenerateTrait
         }
     }
 
-    private function getStaticDefaults(): string
-    {
-        $list = $this->defaults;
-        foreach ($list as $index => list($name, $default)) {
-            $list[$index][0] = "'{$name}'";
-            if (is_bool($default)) {
-                $list[$index][1] = 'true';
-            } elseif (!is_int($default) && !is_float($default)) {
-                $list[$index][1] = "'{$default}'";
-            }
-        }
-
-        $padding = str_pad("", 12);
-        $list = $this->paddingArray($list);
-        $lines = [];
-        foreach ($list as list($name, $default)) {
-            $default = trim($default);
-            $line = "{$padding}{$name} => {$default},";
-            $lines[] = $line;
-        }
-
-        if ($lines) {
-            return implode("\n", $lines);
-        } else {
-            return "{$padding}//here no default value";
-        }
-    }
-
     /**
      * @param string $template
      * @return string
@@ -156,9 +107,7 @@ trait DataGenerateTrait
             '{{package}}',
             '{{properties}}',
             '{{propertie-defines}}',
-            '{{defaults}}',
             '{{static-types}}',
-            '{{static-defaults}}'
         ];
 
         $replaces = [
@@ -167,9 +116,7 @@ trait DataGenerateTrait
             $this->getPackage(),
             $this->getNoteProperties(),
             $this->getPropertyDefines(),
-            $this->getNoteDefaults(),
             $this->getStaticTypes(),
-            $this->getStaticDefaults()
         ];
 
         return str_replace($searches, $replaces, $template);
@@ -201,7 +148,6 @@ trait DataGenerateTrait
 
         $properties = [];
         $types = [];
-        $defaults = [];
 
         foreach ($this->properties as $property) {
             $name = $property->name;
@@ -209,17 +155,11 @@ trait DataGenerateTrait
 
             $modifier = 'property';
 
-            $default = $this->isDefaultValueValid($property->type, $property->default);
-            if ($default !== false) {
-                $defaults[] = [$name, $default];
-            }
-
             $properties[] = [$modifier, $property->type, $property->name, $property->description];
         }
 
         $this->noteProperties = $properties;
         $this->types    = $types;
-        $this->defaults = $defaults;
 
         $this->hasBuild = true;
     }
