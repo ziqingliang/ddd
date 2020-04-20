@@ -59,9 +59,6 @@ class Dispatcher implements \Illuminate\Contracts\Events\Dispatcher
     }
 }
 
-$envFile = BASE_PATH . '/.env';
-file_exists($envFile) && (new Dotenv())->load($envFile);
-
 $container = new Container();
 $dispatcher = new Dispatcher();
 $application = new Application($container, $dispatcher, '0.0.1');
@@ -72,8 +69,9 @@ $application->add(new RegenerateEntityCommand());
 $application->add(new RegenerateValueCommand());
 
 $application->add(new MakeServiceCommand());
-$application->add(new MakeModelCommand());
 $application->add(new MakeDependencyCommand());
+
+$application->add(new MakeModelCommand());
 
 try {
     $status = $application->run();

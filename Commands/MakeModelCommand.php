@@ -10,6 +10,7 @@
 namespace ziqing\ddd\tool;
 
 use Illuminate\Database\Capsule\Manager;
+use Symfony\Component\Dotenv\Dotenv;
 use ziqing\ddd\tool\traits\CollectPropertiesFromConsoleTrait;
 use ziqing\ddd\tool\traits\DataGenerateTrait;
 use ziqing\ddd\tool\traits\DealClassFileNameTrait;
@@ -26,6 +27,7 @@ class MakeModelCommand extends BaseCommand
     use DealClassFileNameTrait;
     use PreviewTrait;
 
+    protected $generatorType = 'model';
     /**
      * The name and signature of the console command.
      *
@@ -34,10 +36,10 @@ class MakeModelCommand extends BaseCommand
     protected $signature = 'make:model 
                                 {className : 指定模型类名称}
                                 {--table=  : 指定对应表名称}
-                                {--sub-domain=Core : 指定实体所属子域(首字母大写，默认核心子域)} 
+                                {--sub-domain=Core : 指定模型所属子域} 
                                 {--preview : 预览，不写入文件}
                                 {--force   : 强制覆盖}
-                                {--connection= : MySQL连接}
+                                {--env-file= : 指定配置有MySQL数据库连接信息的 env 文件}
                                 ';
 
     /**
@@ -45,7 +47,13 @@ class MakeModelCommand extends BaseCommand
      *
      * @var string
      */
-    protected $description = 'make a Model class';
+    protected $description = 'make a Model class refer one exist table; env file should look like:
+        DB_HOST=127.0.0.1
+        DB_PORT=3306
+        DB_USERNAME=root
+        DB_PASSWORD=123456
+        DB_DATABASE=demo
+    ';
 
     private $connection = '';
 
@@ -95,7 +103,6 @@ class MakeModelCommand extends BaseCommand
             '{{className}}',
             '{{package}}',
             '{{properties}}',
-            '{{defaults}}',
             '{{table}}',
             '{{connection}}'
         ];
@@ -105,7 +112,6 @@ class MakeModelCommand extends BaseCommand
             $this->getClassName(),
             $this->getPackage(),
             $this->getProperties(),
-            $this->getNoteDefaults(),
             $this->table,
             $this->connection
         ];
@@ -115,11 +121,27 @@ class MakeModelCommand extends BaseCommand
 
     private function initMysqlConnection()
     {
+        $envFile = $this->option('env-file');
+        $envFile || $envFile = getcwd() . '/.env';
+        file_exists($envFile) && (new Dotenv())->load($envFile);
+
+        $conf = [
+            'driver' => 'mysql',
+            'host' => getenv('DB_HOST'),
+            'port' => getenv('DB_PORT'),
+            'username' => getenv('DB_USERNAME'),
+            'password' => getenv('DB_PASSWORD'),
+            'database' => getenv('DB_DATABASE'),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ];
         $manager = new Manager();
         $manager->setAsGlobal();
-        $this->connection = $this->option('connection') ? $this->option('connection') : config('database.default');
-
-        $manager->addConnection(config('database.connections')[$this->connection], $this->connection);
+        $this->connection = 'default';
+        $manager->addConnection($conf, $this->connection);
     }
 
     private function getTableDefinition($table)
@@ -140,6 +162,7 @@ class MakeModelCommand extends BaseCommand
             $this->collectColumn($column);
             $list[] = $column->toArray();
         }
+
 //        $this->table(Column::getHeader(), $list);
     }
 
@@ -158,6 +181,7 @@ class MakeModelCommand extends BaseCommand
         $map = [
             'datetime' => 'string',
             'date' => 'string',
+            'time' => 'string',
             'string' => 'string',
             'bigint' => 'int',
             'integer' => 'int',
@@ -166,19 +190,23 @@ class MakeModelCommand extends BaseCommand
             'float' => 'float',
             'text' => 'string',
             'decimal' => 'float',
-            'blob' => 'string'
+            'blob' => 'string',
         ];
+
+//        print_r($this->columns);die;
 
         foreach ($this->columns as $column) {
             $property = new Property();
             $property->name = $column->name;
 
             $type = strtolower($column->type);
+            $type = trim($type, '\\');
             if (empty($map[$type])) {
                 $this->error("Unknown property type:{$type}");
                 die;
             }
             $property->type = $map[$type];
+            $property->description = $column->comment;
             $property->default = $column->default;
             $this->addOneProperty($property);
         }
