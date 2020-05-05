@@ -6,4 +6,6 @@
 /composer.lock
 /.domain.env
 /domains
+/infra
+/.env
 /composer.json.bak

@@ -64,7 +64,7 @@ abstract class Data
      */
     final public static function setStrictMode(bool $start = false)
     {
-        self::$isStrict = $start;
+        static::$isStrict = $start;
     }
 
     /**
@@ -89,7 +89,7 @@ abstract class Data
 
         $null = null;
         //处理默认值
-        foreach ($attributes as list($attribute,)) {
+        foreach (array_keys($attributes) as $attribute) {
             $this->setAttribute($attribute, $null);
         }
 
@@ -140,10 +140,6 @@ abstract class Data
      */
     private function validateAttribute(string &$attribute, &$value)
     {
-        if (!static::$isStrict) {
-            return;
-        }
-
         $type = &$this->attributeTypes[$attribute];
         if ($this->isNormalType($type)) {
             $value = $this->castToNormal($type, $value);
@@ -211,20 +207,21 @@ abstract class Data
         $data = [];
         foreach ($this->attributeTypes as $attribute => $type) {
             $value = $this->$attribute;
-            $this->validateAttribute($attribute, $value);
+            if (static::$isStrict) {
+                $this->validateAttribute($attribute, $value);
+            }
 
             if ($this->isEmpty($value)) {
                 if (!$filterNull) {
                     $data[$attribute] = $value;
                 }
             } else {
-                $type = &$this->attributeTypes[$attribute];
+                $type = $this->attributeTypes[$attribute];
                 if ($this->isNormalType($type)) {//常规类型
                     $data[$attribute] = $value;
                 } elseif (is_string($type)) {//对象类型
-                    /** @var self $value */
                     $data[$attribute] = $value->toArray($filterNull);
-                } elseif ($this->isNormalType(reset($type))) {//常规数组
+                } elseif ($this->isNormalType($type[0])) {//常规数组
                     $data[$attribute] = $value;
                 } else {//对象数组
                     $data[$attribute] = [];
@@ -250,15 +247,15 @@ abstract class Data
         return json_encode($this->toArray($filterNull), $option);
     }
 
-    //----------------------------------- cast from string or array -----------------------------------------------------
+    //----------------------------------- cast from string or array ----------------------------------------------------
 
     /**
      * @param mixed $type
      * @return bool
      */
-    private function isNormalType(&$type)
+    private function isNormalType($type)
     {
-        return is_string($type) && isset(self::$normalTypes[$type]);
+        return is_string($type) && isset(static::$normalTypes[$type]);
     }
 
     /**
@@ -266,7 +263,7 @@ abstract class Data
      * @param mixed $value
      * @return array|bool|float|int|string
      */
-    private function castToNormal(&$type, &$value)
+    private function castToNormal($type, $value)
     {
         switch ($type) {
             case 'int':
@@ -301,7 +298,7 @@ abstract class Data
      * @return array
      * @throws Exception
      */
-    private function castFromString(&$type, string &$value)
+    private function castFromString($type, string $value)
     {
         $json = json_decode($value, true);
         if (is_array($type)) {
@@ -323,7 +320,7 @@ abstract class Data
      * @return array
      * @throws Exception
      */
-    private function castFromArray(&$type, array &$values)
+    private function castFromArray($type, array $values)
     {
         if (is_string($type)) {
             return new $type($values);
@@ -402,7 +399,7 @@ abstract class Data
         //如果默认值已被构造，直接返回
         //如果属性为对象，则 clone 一个返回，避免两次调用返回同一个对象实例导致意外结果
         if (isset($this->defaultValues[$attribute])) {
-            $value = &$this->defaultValues[$attribute];
+            $value = $this->defaultValues[$attribute];
             if (is_object($value)) {
                 return clone $value;
             } else {
